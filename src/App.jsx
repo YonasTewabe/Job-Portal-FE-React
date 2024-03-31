@@ -32,7 +32,7 @@ const App = () => {
         <Route path='/jobs' element={<JobsPage />} />
         <Route path='/report' element={<ViewReportPage />} />
         <Route path='/add-job' element={<AddJobPage addJobSubmit={addJob} />} />
-        <Route path='/edit-job/:id' element={<EditJobPage updatedJobSubmit={updateJob} />} loader={jobLoader} />
+        <Route path='/edit-job/:id' element={<EditJobPage updateJobSubmit={updateJob} />} loader={jobLoader} />
         <Route path='/job/:id' element={<JobPage deleteJob={deleteJob} />} loader={jobLoader} />
         <Route path='*' element={<NotFoundPage />} />
       </Route>

@@ -57,9 +57,12 @@ const Navbar = () => {
         <div onClick={() => setNav(!nav)} className="cursor-pointer text-white">
           <AiOutlineMenu size={30} />
         </div>
+    
+        <NavLink to="/">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl px-2 text-white font-bold">
           Application Tracker
         </h1>
+            </NavLink>
       </div>
 
       <button className="bg-background text-white hidden md:flex items-center py-2 rounded-full border border-white px-5 ">
