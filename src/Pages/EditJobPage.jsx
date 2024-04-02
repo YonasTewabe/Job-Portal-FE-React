@@ -140,13 +140,12 @@ const EditJobPage = ({ updateJobSubmit }) => {
                 required
                 onChange={(e) => setSalary(e.target.value)}
               >
-                <option value='$90K - 100K'>Negotiable</option> 
-                <option value='Under $50K'>Under 10,000</option>
-                <option value='$50K - 60K'>10,000 - 13,000</option>
-                <option value='$60K - 70K'>13,0000 - 15,000</option>
-                <option value='$70K - 80K'>15,000 - 20,000</option>
-                <option value='$80K - 90K'>20,000 - 25,000</option>
-                <option value='$90K - 100K'>Over 20,000</option>
+                <option value='Negotiable'>Negotiable</option> 
+                <option value='Under 10K'>Under 10,000</option>
+                <option value='$10K - 15K'>10,000 - 15,000</option>
+                <option value='$15K - 20K'>15,000 - 20,000</option>
+                <option value='$20K - 25K'>20,000 - 25,000</option>
+                <option value='$Over 25K'>Over 25,000</option>
               </select>
             </div>
 
