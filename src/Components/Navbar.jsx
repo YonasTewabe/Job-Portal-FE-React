@@ -4,7 +4,7 @@ import { FaHome } from "react-icons/fa";
 import { CiLogout } from "react-icons/ci";
 import { MdOutlineAccountCircle, MdSummarize } from "react-icons/md";
 import { GoPlusCircle } from "react-icons/go";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 
 const Navbar = () => {
   const [nav, setNav] = useState(false);
@@ -50,6 +50,8 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleOutsideClick);
     };
   }, []);
+
+  const { id } = useParams();
 
   return (
     <div className="max-w-[1640px] mx-auto flex justify-between items-center p-1 shadow-sm bg-background fixed top-0 left-0 w-full z-50">
@@ -105,14 +107,14 @@ const Navbar = () => {
         </nav>
 
         <div onClick={() => setNav(!nav)} className="cursor-pointer text-white">
-          <ul>
-            <NavLink to="/AccountPage">
-              <li className="text-xl flex cursor-pointer bg-background absolute bottom-0 w-full">
-                {<MdOutlineAccountCircle size={25} className="mr-4" />} Account
-              </li>
-            </NavLink>
-          </ul>
-        </div>
+        <ul>
+          <NavLink to={`/account/${id}`}> {/* Use the extracted id in the NavLink */}
+            <li className="text-xl flex cursor-pointer bg-background absolute bottom-0 w-full">
+              {<MdOutlineAccountCircle size={25} className="mr-4" />} Account
+            </li>
+          </NavLink>
+        </ul>
+      </div>
       </div>
     </div>
   );

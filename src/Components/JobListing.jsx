@@ -11,7 +11,6 @@ const JobListing = ({job}) => {
  if (!showFullDescription){
     description = description.substring(0, 150) + '...';
  }
-console.log(job.salary)
  
     return (
     <div key={job.id} className="bg-white rounded-xl shadow-md relative">
