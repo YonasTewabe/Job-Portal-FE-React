@@ -29,19 +29,24 @@ const AddJob = ({ addJobSubmit }) => {
       requirement,
       salary,
       deadline,
-      company: {
-        name: companyName,
-        description: companyDescription,
+       companyName,
+        companyDescription,
         contactEmail,
         contactPhone,
-      },
     };
-
+    function refreshPage() {
+      window.location.reload(false);
+    }
+    try{
     addJobSubmit(newJob);
-
     toast.success('Job Added Successfully');
-
+    refreshPage()
     return navigate('/jobs');
+    }
+    catch(error){
+      
+      toast.error("Failed to add new job. Please try again.");
+    }
   };
 
   return (

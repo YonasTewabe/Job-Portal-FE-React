@@ -4,7 +4,7 @@ import { FaHome } from "react-icons/fa";
 import { CiLogout } from "react-icons/ci";
 import { MdOutlineAccountCircle, MdSummarize } from "react-icons/md";
 import { GoPlusCircle } from "react-icons/go";
-import { NavLink, useParams } from "react-router-dom";
+import { useNavigate, NavLink, useParams } from "react-router-dom";
 
 const Navbar = () => {
   const [nav, setNav] = useState(false);
@@ -43,7 +43,13 @@ const Navbar = () => {
     }
   };
 
-  useEffect(() => {
+  const navigate = useNavigate()
+
+    const logoutClick = () => {
+      navigate("/login");
+    };
+
+useEffect(() => {
     document.addEventListener("mousedown", handleOutsideClick);
 
     return () => {
@@ -67,7 +73,7 @@ const Navbar = () => {
             </NavLink>
       </div>
 
-      <button className="bg-background text-white hidden md:flex items-center py-2 rounded-full border border-white px-5 ">
+      <button onClick={logoutClick} className="bg-background text-white hidden md:flex items-center py-2 rounded-full border border-white px-5 ">
         <CiLogout size={20} className="mr-2" /> Logout
       </button>
 
@@ -110,7 +116,7 @@ const Navbar = () => {
         <ul>
           <NavLink to={`/account/${id}`}> {/* Use the extracted id in the NavLink */}
             <li className="text-xl flex cursor-pointer bg-background absolute bottom-0 w-full">
-              {<MdOutlineAccountCircle size={25} className="mr-4" />} Account
+              {<MdOutlineAccountCircle size={25} className="mr-4" />} My Profile
             </li>
           </NavLink>
         </ul>

@@ -11,12 +11,12 @@ const EditJob = ({ updateJobSubmit }) => {
   const [description, setDescription] = useState(job.description);
   const [requirement, setRequirement] = useState(job.requirement);
   const [salary, setSalary] = useState(job.salary);
-  const [companyName, setCompanyName] = useState(job.company.name);
+  const [companyName, setCompanyName] = useState(job.compnayName);
   const [companyDescription, setCompanyDescription] = useState(
-    job.company.description
+    job.companyDescription
   );
-  const [contactEmail, setContactEmail] = useState(job.company.contactEmail);
-  const [contactPhone, setContactPhone] = useState(job.company.contactPhone);
+  const [contactEmail, setContactEmail] = useState(job.contactEmail);
+  const [contactPhone, setContactPhone] = useState(job.contactPhone);
   const [deadline, setDeadline] = useState(job.deadline);
 
 
@@ -35,17 +35,25 @@ const EditJob = ({ updateJobSubmit }) => {
       requirement,
       salary,
       deadline,
-      company: {
-        name: companyName,
-        description: companyDescription,
+      companyName,
+        companyDescription,
         contactEmail,
         contactPhone,
-      },
     };
 
+    function refreshPage() {
+      window.location.reload(false);
+    }
+    try{
     updateJobSubmit(updatedJob);
-
-    toast.success('Job Updated Successfully');
+    toast.success('Job Added Successfully');
+    refreshPage()
+    return navigate('/jobs');
+    }
+    catch(error){
+      
+      toast.error("Failed to update job. Please try again.");
+    }
 
     return navigate(`/job/${id}`);
   };

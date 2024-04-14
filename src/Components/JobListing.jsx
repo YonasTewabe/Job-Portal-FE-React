@@ -16,7 +16,7 @@ const JobListing = ({job}) => {
     <div key={job.id} className="bg-white rounded-xl shadow-md relative">
     <div className="p-4">
       <div className="mb-6">
-        <div className="text-gray-600 my-2">{job.company.name}</div>
+        <div className="text-gray-600 my-2">{job.companyName}</div>
         <h3 className="text-xl font-bold">{job.title}</h3>
       </div>
       <div className="text-indigo-500 mb-2">{job.requirement} </div>
