@@ -11,7 +11,7 @@ const EditJob = ({ updateJobSubmit }) => {
   const [description, setDescription] = useState(job.description);
   const [requirement, setRequirement] = useState(job.requirement);
   const [salary, setSalary] = useState(job.salary);
-  const [companyName, setCompanyName] = useState(job.compnayName);
+  const [companyName, setCompanyName] = useState(job.companyName);
   const [companyDescription, setCompanyDescription] = useState(
     job.companyDescription
   );
@@ -46,9 +46,9 @@ const EditJob = ({ updateJobSubmit }) => {
     }
     try{
     updateJobSubmit(updatedJob);
-    toast.success('Job Added Successfully');
+    toast.success('Job Updated Successfully');
     refreshPage()
-    return navigate('/jobs');
+    return navigate(`/jobs`);
     }
     catch(error){
       
@@ -225,6 +225,7 @@ const EditJob = ({ updateJobSubmit }) => {
                 className='border rounded w-full py-2 px-3'
                 rows='4'
                 placeholder='What does your company do?'
+                required
                 value={companyDescription}
                 onChange={(e) => setCompanyDescription(e.target.value)}
               ></textarea>

@@ -10,7 +10,7 @@ const Account = () => {
       <section className="bg-indigo-50">
         <div className="container m-auto py-10 px-6">
           <div className="grid grid-cols-1  w-full gap-6">
-            <div className="bg-white p-6 rounded-lg shadow-md text-center md:text-left">
+            <div className="bg-white p-6 rounded-lg shadow-md md:text-left">
               <h3 className="text-indigo-800 text-lg font-bold mb-6">
                 Personal Information
               </h3>
