@@ -13,6 +13,8 @@ import Account, { userLoader } from "./Pages/Account";
 import UpdateUser from "./Pages/UpdateUser";
 import SignUp from "./Pages/SignUp";
 import ValidatedLoginForm from "./Pages/Login";
+import ViewApplicants from "./Pages/ViewApplicants"
+import ApplyJob from "./Pages/ApplyJob";
 
 const App = () => {
   // Add new job
@@ -53,6 +55,8 @@ const App = () => {
         <Route path='*' element={<NotFoundPage />} />
         <Route path='/signup' element={<SignUp />} />
         <Route path='/login' element={<ValidatedLoginForm />} />
+        <Route path='/applicants/:id' element={<ViewApplicants />} />
+        <Route path='/apply/:id' element={<ApplyJob />} />
       </Route>
     )
   );
