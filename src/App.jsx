@@ -15,6 +15,8 @@ import SignUp from "./Pages/SignUp";
 import ValidatedLoginForm from "./Pages/Login";
 import ViewApplicants from "./Pages/ViewApplicants"
 import ApplyJob from "./Pages/ApplyJob";
+import ContactUs from "./Pages/ContactUs";
+import AboutUs from "./Pages/AboutUs";
 
 const App = () => {
   // Add new job
@@ -42,7 +44,7 @@ const App = () => {
 
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route path='/' element={<Layout />}>
+        <Route path='/' element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path='/jobs' element={<Jobs />} />
         <Route path='/report' element={<ViewReport />} />
@@ -57,6 +59,8 @@ const App = () => {
         <Route path='/login' element={<ValidatedLoginForm />} />
         <Route path='/applicants/:id' element={<ViewApplicants />} />
         <Route path='/apply/:id' element={<ApplyJob />} />
+        <Route path='/contact' element={<ContactUs />} />
+        <Route path='/about' element={<AboutUs />} />
       </Route>
     )
   );

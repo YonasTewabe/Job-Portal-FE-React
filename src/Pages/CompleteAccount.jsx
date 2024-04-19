@@ -33,7 +33,7 @@ const CompleteAccount = ({ userInformationSubmit }) => {
 
     userInformationSubmit(userInformation);
 
-    toast.success("Information Updated Successfully");
+    toast.success("Information Added Successfully");
 
     return navigate("/");
     

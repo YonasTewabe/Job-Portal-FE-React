@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import { FaHome } from "react-icons/fa";
 import { CiLogout } from "react-icons/ci";
 import { MdOutlineAccountCircle, MdSummarize } from "react-icons/md";
 import { GoPlusCircle } from "react-icons/go";
 import { useNavigate, NavLink, useParams } from "react-router-dom";
+import { FaHome } from "react-icons/fa";
 
 const Navbar = () => {
   const [nav, setNav] = useState(false);
@@ -25,13 +25,13 @@ const Navbar = () => {
     },
     {
       icon: <MdSummarize size={25} className="mr-4" />,
-      text: "Jobs ",
+      text: "Jobs",
       link: "/jobs",
       className: { linkClass },
     },
     {
       icon: <MdSummarize size={25} className="mr-4" />,
-      text: "View Report ",
+      text: "View Report",
       link: "/report",
       className: { linkClass },
     },
@@ -43,13 +43,13 @@ const Navbar = () => {
     }
   };
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-    const logoutClick = () => {
-      navigate("/login");
-    };
+  const logoutClick = () => {
+    navigate("/login");
+  };
 
-useEffect(() => {
+  useEffect(() => {
     document.addEventListener("mousedown", handleOutsideClick);
 
     return () => {
@@ -65,24 +65,24 @@ useEffect(() => {
         <div onClick={() => setNav(!nav)} className="cursor-pointer text-white">
           <AiOutlineMenu size={30} />
         </div>
-    
+
         <NavLink to="/">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl px-2 text-white font-bold">
-          Application Tracker
-        </h1>
-            </NavLink>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl px-2 text-white font-bold">
+            Application Tracker
+          </h1>
+        </NavLink>
       </div>
 
-      <button onClick={logoutClick} className="bg-background text-white hidden md:flex items-center py-2 rounded-full border border-white px-5 ">
+      {/* Logout button */}
+      <button
+        onClick={logoutClick}
+        className="bg-background text-white md:flex items-center py-2 rounded-full border border-white px-5"
+      >
         <CiLogout size={20} className="mr-2" /> Logout
       </button>
 
       {/* Overlay */}
-      {nav ? (
-        <div className="bg-black/80 fixed w-full h-screen z-60 top-0 left-0"></div>
-      ) : (
-        ""
-      )}
+      {nav && <div className="bg-black/80 fixed w-full h-screen z-60 top-0 left-0"></div>}
 
       {/* Side drawer menu */}
       <div
@@ -101,8 +101,8 @@ useEffect(() => {
             {menuItems.map(({ icon, text, link }, index) => {
               return (
                 <div key={index} className=" py-4">
-                  <NavLink to={link} className={linkClass} onClick={() => setNav(false)} >
-                    <li className="text-xl flex cursor-pointer  w-[95%] mx-auto hover:bg-[#e1e9f0] ">
+                  <NavLink to={link} className={linkClass} onClick={() => setNav(false)}>
+                    <li className="text-xl flex cursor-pointer  w-[95%] mx-auto hover:bg-[#e1e9f0]">
                       {icon} {text}
                     </li>
                   </NavLink>
@@ -113,14 +113,14 @@ useEffect(() => {
         </nav>
 
         <div onClick={() => setNav(!nav)} className="cursor-pointer text-white">
-        <ul>
-          <NavLink to={`/account/${id}`}> {/* Use the extracted id in the NavLink */}
-            <li className="text-xl flex cursor-pointer bg-background absolute bottom-0 w-full">
-              {<MdOutlineAccountCircle size={25} className="mr-4" />} My Profile
-            </li>
-          </NavLink>
-        </ul>
-      </div>
+          <ul>
+            <NavLink to={`/account/${id}`}> {/* Use the extracted id in the NavLink */}
+              <li className="text-xl flex cursor-pointer bg-background absolute bottom-0 w-full">
+                {<MdOutlineAccountCircle size={25} className="mr-4" />} My Profile
+              </li>
+            </NavLink>
+          </ul>
+        </div>
       </div>
     </div>
   );
