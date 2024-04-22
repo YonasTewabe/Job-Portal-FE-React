@@ -25,7 +25,7 @@ const Navbar = () => {
     },
     {
       icon: <MdSummarize size={25} className="mr-4" />,
-      text: "Jobs",
+      text: "Your Jobs",
       link: "/jobs",
       className: { linkClass },
     },
@@ -45,8 +45,13 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
-  const logoutClick = () => {
-    navigate("/login");
+  const logoutClick = async() => {
+    await fetch("http://localhost:5000/profile/logout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    navigate("/login")
   };
 
   useEffect(() => {
@@ -73,18 +78,17 @@ const Navbar = () => {
         </NavLink>
       </div>
 
-      {/* Logout button */}
-      <button
-        onClick={logoutClick}
-        className="bg-background text-white md:flex items-center py-2 rounded-full border border-white px-5"
-      >
-        <CiLogout size={20} className="mr-2" /> Logout
-      </button>
+      <div className="flex items-center">
+        <NavLink to={`/account/${id}`} className="text-white mr-4">
+          <MdOutlineAccountCircle size={30} />My Profile
+        </NavLink>
+        <button className="text-white" onClick={logoutClick}>
+          <CiLogout size={30} />Logout
+        </button>
+      </div>
 
-      {/* Overlay */}
       {nav && <div className="bg-black/80 fixed w-full h-screen z-60 top-0 left-0"></div>}
 
-      {/* Side drawer menu */}
       <div
         ref={sidebarRef}
         className={
@@ -111,16 +115,6 @@ const Navbar = () => {
             })}
           </ul>
         </nav>
-
-        <div onClick={() => setNav(!nav)} className="cursor-pointer text-white">
-          <ul>
-            <NavLink to={`/account/${id}`}> {/* Use the extracted id in the NavLink */}
-              <li className="text-xl flex cursor-pointer bg-background absolute bottom-0 w-full">
-                {<MdOutlineAccountCircle size={25} className="mr-4" />} My Profile
-              </li>
-            </NavLink>
-          </ul>
-        </div>
       </div>
     </div>
   );

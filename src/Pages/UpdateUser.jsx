@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams, useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-// eslint-disable-next-line react/prop-types
+// eslint-disable-next-line react/prop-types, no-unused-vars
 const UpdateUser = ({ updateInformationSubmit }) => {
   const user = useLoaderData();
   const [fullname, setFullName] = useState(user.fullname);
@@ -32,18 +32,34 @@ const UpdateUser = ({ updateInformationSubmit }) => {
       contactPhone,
     };
   
+   
   
+  const updateInformationSubmit = async (id, updatedInformation) => {
     try {
-      //destructured the updaetdInfo to get the ID
-      await updateInformationSubmit({ id, ...updatedInformation });
-      toast.success("Information Updated Successfully");
-      navigate(`/account/${id}`);
+      const response = await fetch(`http://localhost:5000/profile/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedInformation),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to update information");
+      }
     } catch (error) {
-      // console.error(error.message);
-      toast.error("Failed to update information. Please try again.");
+      throw new Error("Failed to update information");
     }
   };
-  
+  try {
+    await updateInformationSubmit(id, updatedInformation);
+    toast.success("Information Updated Successfully");
+    navigate(`/account/${id}`);
+  } catch (error) {
+    toast.error("Failed to update information. Please try again.");
+    console.log(error.message)
+  }
+};
 
   return (
     <section className="bg-indigo-50">

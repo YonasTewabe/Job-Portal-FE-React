@@ -79,7 +79,7 @@ const Account = () => {
 };
 
 const userLoader = async ({ params }) => {
-  const res = await axios.get(`/api/user/${params.id}`);
+  const res = await axios.get(`/api/profile/${params.id}`);
   return res.data;
 };
 

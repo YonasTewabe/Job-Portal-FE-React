@@ -1,32 +1,45 @@
 import axios from "axios";
-import { useLoaderData, useParams } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
 
-
+// eslint-disable-next-line react-refresh/only-export-components
 const ViewApplicants = () => {
-    const job = useLoaderData();
-  const { id } = useParams();
-
+  const user = useLoaderData();
 
   return (
-    <div className='container mx-auto py-10 px-6'><br />
-      <h1 className='text-3xl mb-6'>Applicants</h1>
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-      <div className='bg-white p-6 rounded-lg shadow-md text-center md:text-left'>
-                <h1 className='text-3xl font-bold mb-4'>{job.type}</h1>
-                <div className='text-gray-500 mb-4'>{job.type}</div>
-                <div className='text-gray-500 mb-4 flex align-middle justify-center md:justify-start'>
-                  <p className='text-orange-700'>{job.location}</p>
-                </div>
-              </div>
-         
-        
+    <div className="container mx-auto py-10 px-6">
+      <br />
+      <h1 className="text-3xl mb-6 text-indigo-700">Applicants for </h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+        <div className="bg-white p-6 rounded-lg shadow-md text-center md:text-left">
+          <h3 className="text-xl font-bold">Full Name:</h3>
+          <p className="my-2 bg-indigo-100 p-2 font-bold">{user.fullname}</p>
+
+          <h3 className="text-xl font-bold">Education:</h3>
+          <p className="my-2 bg-indigo-100 p-2 font-bold">{user.degree}</p>
+
+          <h3 className="text-xl font-bold">Experience:</h3>
+          <p className="my-2 bg-indigo-100 p-2 font-bold">{user.experience}</p>
+
+          <div className="flex justify-center items-center mt-4">
+            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mr-2">
+              Accept
+            </button>
+            <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full mr-2">
+              Reject
+            </button>
+            <button className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full">
+              View Details
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
-const jobLoader = async ({ params }) => {
-    const res = await axios.get(`/api/jobs/${params.id}`);
-   return res.data;
-  };
-export default ViewApplicants;
+
+const userLoader = async ({ params }) => {
+  const res = await axios.get(`/api/profile/${params.id}`);
+  return res.data;
+};
+export { ViewApplicants as default, userLoader };

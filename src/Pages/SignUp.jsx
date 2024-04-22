@@ -18,7 +18,7 @@ const SignUp = () => {
     if (!validateForm()) {
       return;
     }
-    await fetch('http://localhost:5000/credential/signup', {
+    await fetch('http://localhost:5000/profile/signup', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({

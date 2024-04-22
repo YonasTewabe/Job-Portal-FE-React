@@ -18,8 +18,26 @@ const AddJob = ({ addJobSubmit }) => {
 
   const navigate = useNavigate();
 
-  const submitForm = (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
+    await fetch("http://localhost:5000/jobs/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        title,
+        type,
+        location,
+        description,
+        requirement,
+        salary,
+        deadline,
+        companyName,
+        companyDescription,
+        contactEmail,
+        contactPhone,
+      }),
+    });
     
     const currentDate = new Date();
     const deadlineDate = new Date(deadline);
@@ -27,26 +45,12 @@ const AddJob = ({ addJobSubmit }) => {
       toast.error('Deadline date cannot be in the past');
       return;
     }
-    const newJob = {
-      title,
-      type,
-      location,
-      description,
-      requirement,
-      salary,
-      deadline,
-       companyName,
-        companyDescription,
-        contactEmail,
-        contactPhone,
-    };
-    function refreshPage() {
-      window.location.reload(false);
-    }
+
+
     try{
-    addJobSubmit(newJob);
+    addJobSubmit(submitForm);
     toast.success('Job Added Successfully');
-    refreshPage()
+
     return navigate('/jobs');
     }
     catch(error){

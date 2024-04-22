@@ -9,12 +9,11 @@ const ValidatedLoginForm = () => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-  const passwordRegex =
-    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/;
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch("http://localhost:5000/credential/login", {
+    await fetch("http://localhost:5000/profile/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -45,10 +44,6 @@ const ValidatedLoginForm = () => {
         .required("Email is required"),
       password: Yup.string()
         .required("Password is required")
-        .matches(
-          passwordRegex,
-          "Password must contain at least one number, one uppercase letter, one lowercase letter, and one special character"
-        )
         .min(8, "Password must be at least 8 characters"),
     });
 
