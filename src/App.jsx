@@ -17,6 +17,7 @@ import ViewApplicants from "./Pages/ViewApplicants"
 import ApplyJob from "./Pages/ApplyJob";
 import ContactUs from "./Pages/ContactUs";
 import AboutUs from "./Pages/AboutUs";
+import ViewStatus from "./Pages/ViewStatus";
 
 const App = () => {
   // Add new job
@@ -35,11 +36,11 @@ const App = () => {
   };
   
   const completeInfo = async (userInformation) => {
-    await axios.post('/api/user', userInformation);
+    await axios.post('/api/profile', userInformation);
   };
 
   const updatedInfo = async (user) => {
-    await axios.put(`/api/user/${user.id}`, user);
+    await axios.put(`/api/profile/${user.id}`, user);
   };
 
   const router = createBrowserRouter(
@@ -57,10 +58,11 @@ const App = () => {
         <Route path='*' element={<NotFoundPage />} />
         <Route path='/signup' element={<SignUp />} />
         <Route path='/login' element={<ValidatedLoginForm />} />
-        <Route path='/applicants/:id' element={<ViewApplicants />} />
+        <Route path='/applicants/:id' element={<ViewApplicants />} loader={userLoader} />
         <Route path='/apply/:id' element={<ApplyJob />} />
         <Route path='/contact' element={<ContactUs />} />
         <Route path='/about' element={<AboutUs />} />
+        <Route path='/status' element={<ViewStatus />} />
       </Route>
     )
   );

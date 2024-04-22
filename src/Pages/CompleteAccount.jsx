@@ -6,37 +6,46 @@ import { toast } from "react-toastify";
 const CompleteAccount = ({ userInformationSubmit }) => {
   const [fullname, setFullName] = useState("");
   const [age, setAge] = useState("");
-  const [sex, setSex] = useState("");
+  const [sex, setSex] = useState("male");
   const [degree, setDegree] = useState("");
   const [university, setUniversity] = useState("");
-  const [experience, setExpereince] = useState("none");
-  const [cv, setCv] = useState("");
+  const [experience, setExperience] = useState("None");
+  // const [cv, setCv] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [contactPhone, setContactPhone] = useState("");
-
   const navigate = useNavigate();
 
-  const submitForm = (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
-
-    const userInformation = {
-      fullname,
-      age,
-      sex,
-      experience,
-      cv,
-      degree,
-      university,
-      contactEmail,
-      contactPhone,
-    };
-
-    userInformationSubmit(userInformation);
-
-    toast.success("Information Added Successfully");
-
-    return navigate("/");
-    
+    try {
+      const res = await fetch("http://localhost:5000/profile/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          fullname,
+          age,
+          sex,
+          experience,
+          degree,
+          university,
+          contactEmail,
+          contactPhone,
+          // Add cv field if needed
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        userInformationSubmit(data);
+        toast.success("Information Added Successfully");
+        navigate("/");
+      } else {
+        throw new Error("Failed to submit form");
+      }
+    } catch (error) {
+      console.error(error.message);
+      toast.error("Failed to submit form");
+    }
   };
 
   return (
@@ -77,35 +86,36 @@ const CompleteAccount = ({ userInformationSubmit }) => {
                 onChange={(e) => setAge(e.target.value)}
               />
             </div>
+
             <div className="mb-4">
-  <label className="block text-gray-700 font-bold mb-2">Sex</label>
-  <div className="flex items-center">
-    <label className="mr-2">
-      <input
-        type="radio"
-        id="male"
-        name="sex"
-        value="Male"
-        checked={sex === "Male"}
-        onChange={(e) => setSex(e.target.value)}
-        className="mr-1"
-      />
-      Male
-    </label>
-    <label>
-      <input
-        type="radio"
-        id="female"
-        name="sex"
-        value="Female"
-        checked={sex === "Female"}
-        onChange={(e) => setSex(e.target.value)}
-        className="mr-1"
-      />
-      Female
-    </label>
-  </div>
-</div>
+              <label className="block text-gray-700 font-bold mb-2">Sex</label>
+              <div className="flex items-center">
+                <label className="mr-2">
+                  <input
+                    type="radio"
+                    id="male"
+                    name="sex"
+                    value="Male"
+                    checked={sex === "Male"}
+                    onChange={(e) => setSex(e.target.value)}
+                    className="mr-1"
+                  />
+                  Male
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    id="female"
+                    name="sex"
+                    value="Female"
+                    checked={sex === "Female"}
+                    onChange={(e) => setSex(e.target.value)}
+                    className="mr-1"
+                  />
+                  Female
+                </label>
+              </div>
+            </div>
 
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">
@@ -122,35 +132,37 @@ const CompleteAccount = ({ userInformationSubmit }) => {
                 onChange={(e) => setDegree(e.target.value)}
               />
             </div>
+
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">
-                Univeristy
+                University
               </label>
               <input
                 type="text"
-                id="University"
-                name="University"
+                id="university"
+                name="university"
                 className="border rounded w-full py-2 px-3 mb-2"
-                placeholder="University or Collage Attended"
+                placeholder="University or College Attended"
                 required
                 value={university}
                 onChange={(e) => setUniversity(e.target.value)}
               />
             </div>
+
             <div className="mb-4">
               <label
-                htmlFor="type"
+                htmlFor="expereince"
                 className="block text-gray-700 font-bold mb-2"
               >
-                Expereince
+                Experience
               </label>
               <select
-                id="expereince"
-                name="expereince"
+                id="experience"
+                name="experience"
                 className="border rounded w-full py-2 px-3"
                 value={experience}
                 required
-                onChange={(e) => setExpereince(e.target.value)}
+                onChange={(e) => setExperience(e.target.value)}
               >
                 <option value="None">None</option>
                 <option value="Less than 1 Year">Less than 1 Year</option>
@@ -160,15 +172,14 @@ const CompleteAccount = ({ userInformationSubmit }) => {
               </select>
             </div>
 
-          
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">
                 Email Address
               </label>
               <input
                 type="email"
-                id="contact_email"
-                name="contact_email"
+                id="contactEmail"
+                name="contactEmail"
                 className="border rounded w-full py-2 px-3"
                 placeholder="Contact Email"
                 required
@@ -176,17 +187,18 @@ const CompleteAccount = ({ userInformationSubmit }) => {
                 onChange={(e) => setContactEmail(e.target.value)}
               />
             </div>
+
             <div className="mb-4">
               <label
-                htmlFor="contact_phone"
+                htmlFor="contactPhone"
                 className="block text-gray-700 font-bold mb-2"
               >
                 Phone Number
               </label>
               <input
                 type="tel"
-                id="contact_phone"
-                name="contact_phone"
+                id="contactPhone"
+                name="contactPhone"
                 className="border rounded w-full py-2 px-3"
                 placeholder="Contact Phone"
                 required
@@ -194,7 +206,8 @@ const CompleteAccount = ({ userInformationSubmit }) => {
                 onChange={(e) => setContactPhone(e.target.value)}
               />
             </div>
-            <div className="mb-4">
+
+            {/* <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">CV</label>
               <input
                 type="file"
@@ -204,8 +217,7 @@ const CompleteAccount = ({ userInformationSubmit }) => {
                 value={cv}
                 onChange={(e) => setCv(e.target.value)}
               />
-            </div>
-
+            </div> */}
 
             <div>
               <button
@@ -221,4 +233,5 @@ const CompleteAccount = ({ userInformationSubmit }) => {
     </section>
   );
 };
+
 export default CompleteAccount;

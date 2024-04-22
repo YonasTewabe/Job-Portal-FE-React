@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useParams, useLoaderData, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+// eslint-disable-next-line no-unused-vars
 const EditJob = ({ updateJobSubmit }) => {
   const job = useLoaderData();
   const [title, setTitle] = useState(job.title);
@@ -23,11 +24,10 @@ const EditJob = ({ updateJobSubmit }) => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const submitForm = (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
-
+  
     const updatedJob = {
-      id,
       title,
       type,
       location,
@@ -36,28 +36,33 @@ const EditJob = ({ updateJobSubmit }) => {
       salary,
       deadline,
       companyName,
-        companyDescription,
-        contactEmail,
-        contactPhone,
+      companyDescription,
+      contactEmail,
+      contactPhone,
     };
-
-    function refreshPage() {
-      window.location.reload(false);
+  
+    try {
+      const response = await fetch(`http://localhost:5000/jobs/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedJob),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to update Job");
+      }
+  
+      toast.success("Job Updated Successfully");
+      navigate(`/job/${id}`);
+    } catch (error) {
+      toast.error("Failed to update Job. Please try again.");
+      console.log(error.message);
     }
-    try{
-    updateJobSubmit(updatedJob);
-    toast.success('Job Updated Successfully');
-    refreshPage()
-    return navigate(`/jobs`);
-    }
-    catch(error){
-      
-      toast.error("Failed to update job. Please try again.");
-    }
-
-    return navigate(`/job/${id}`);
   };
-
+  
+  
   return (
     <section className='bg-indigo-50'>
       <div className='container m-auto max-w-2xl py-24'>
@@ -152,11 +157,11 @@ const EditJob = ({ updateJobSubmit }) => {
                 onChange={(e) => setSalary(e.target.value)}
               >
                 <option value='Negotiable'>Negotiable</option> 
-                <option value='Under 10K'>Under 10,000</option>
-                <option value='$10K - 15K'>10,000 - 15,000</option>
-                <option value='$15K - 20K'>15,000 - 20,000</option>
-                <option value='$20K - 25K'>20,000 - 25,000</option>
-                <option value='$Over 25K'>Over 25,000</option>
+                <option value='Under 10,000'>Under 10,000</option>
+                <option value='10,000 - 15,000'>10,000 - 15,000</option>
+                <option value='15,000 - 20,000'>15,000 - 20,000</option>
+                <option value='20,000 - 25,000'>20,000 - 25,000</option>
+                <option value='Over 25,000'>Over 25,000</option>
               </select>
             </div>
 

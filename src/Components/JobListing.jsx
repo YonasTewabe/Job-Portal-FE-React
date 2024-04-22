@@ -19,12 +19,14 @@ const JobListing = ({job}) => {
         <div className="text-gray-600 my-2">{job.companyName}</div>
         <h3 className="text-xl font-bold">{job.title}</h3>
       </div>
-      <div className="text-indigo-500 mb-2">{job.requirement} </div>
+      <div className="text-indigo-500 mb-2">{job.type} </div>
       
       <div className="mb-5">{description} </div>
       <button onClick={() => setShowFullDescription((prevState)=>!prevState)} className="text-red-500 mb-2 hover:text-indigo-600">
         {showFullDescription? 'Less': 'More'}
       </button>
+      <div className="text-indigo-500 mb-2">Deadline: {job.deadline} </div>
+
       <div className="flex flex-col lg:flex-row justify-between mb-4">
         <Link
           to={`/job/${job.id}`}
