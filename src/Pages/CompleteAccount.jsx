@@ -10,7 +10,7 @@ const CompleteAccount = ({ userInformationSubmit }) => {
   const [degree, setDegree] = useState("");
   const [university, setUniversity] = useState("");
   const [experience, setExperience] = useState("None");
-  // const [cv, setCv] = useState("");
+  const [cv, setCv] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const navigate = useNavigate();
@@ -31,7 +31,6 @@ const CompleteAccount = ({ userInformationSubmit }) => {
           university,
           contactEmail,
           contactPhone,
-          // Add cv field if needed
         }),
       });
       if (res.ok) {
@@ -46,7 +45,31 @@ const CompleteAccount = ({ userInformationSubmit }) => {
       console.error(error.message);
       toast.error("Failed to submit form");
     }
+   
+  
+    try {
+      const res = await fetch("http://localhost:5000/profile/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          cv
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        userInformationSubmit(data);
+      } else {
+        throw new Error("Failed to submit form");
+      }
+    } catch (error) {
+      console.error(error.message);
+      toast.error("Failed to submit form");
+    }
+   
+  
   };
+
 
   return (
     <section className="bg-indigo-50">
@@ -76,13 +99,15 @@ const CompleteAccount = ({ userInformationSubmit }) => {
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">Age</label>
               <input
-                type="text"
+                type="number"
                 id="age"
                 name="age"
                 className="border rounded w-1/3 py-2 px-3 mb-2"
                 placeholder="Age"
                 required
                 value={age}
+                maxLength={2}
+                minLength={2}
                 onChange={(e) => setAge(e.target.value)}
               />
             </div>
@@ -195,19 +220,24 @@ const CompleteAccount = ({ userInformationSubmit }) => {
               >
                 Phone Number
               </label>
+              <div className="flex">
+              <span className="border rounded-l py-2 px-3 bg-gray-200">+251</span>
               <input
-                type="tel"
+                type="number"
                 id="contactPhone"
                 name="contactPhone"
                 className="border rounded w-full py-2 px-3"
                 placeholder="Contact Phone"
                 required
                 value={contactPhone}
+                maxLength={9}
+                minLength={9}
                 onChange={(e) => setContactPhone(e.target.value)}
               />
+              </div>
             </div>
 
-            {/* <div className="mb-4">
+            <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">CV</label>
               <input
                 type="file"
@@ -215,9 +245,11 @@ const CompleteAccount = ({ userInformationSubmit }) => {
                 name="cv"
                 className="border rounded w-full py-2 px-3"
                 value={cv}
-                onChange={(e) => setCv(e.target.value)}
+                required
+                accept="application/pdf"
+                onChange={(e) => setCv(e.target.files[0])}
               />
-            </div> */}
+            </div>
 
             <div>
               <button

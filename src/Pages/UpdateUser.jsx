@@ -10,8 +10,8 @@ const UpdateUser = ({ updateInformationSubmit }) => {
   const [sex, setSex] = useState(user.sex);
   const [degree, setDegree] = useState(user.degree);
   const [university, setUniversity] = useState(user.university);
-  const [experience, setExpereince] = useState(user.experience);
-  // const [cv, setCv] = useState(user.cv);
+  const [experience, setExpereince] = useState(user.experience || 'None');
+  const [cv, setCv] = useState(user.cv);
   const [contactEmail, setContactEmail] = useState(user.contactEmail);
   const [contactPhone, setContactPhone] = useState(user.contactPhone);
 
@@ -96,6 +96,8 @@ const UpdateUser = ({ updateInformationSubmit }) => {
                 placeholder="Age"
                 required
                 value={age}
+                maxLength={2}
+                minLength={2}
                 onChange={(e) => setAge(e.target.value)}
               />
             </div>
@@ -198,36 +200,43 @@ const UpdateUser = ({ updateInformationSubmit }) => {
                 value={contactEmail}
                 onChange={(e) => setContactEmail(e.target.value)}
               />
-            </div>
-            <div className="mb-4">
+              </div>
+           <div className="mb-4">
               <label
-                htmlFor="contact_phone"
+                htmlFor="contactPhone"
                 className="block text-gray-700 font-bold mb-2"
               >
                 Phone Number
               </label>
+              <div className="flex">
+              <span className="border rounded-l py-2 px-3 bg-gray-200">+251</span>
               <input
-                type="tel"
-                id="contact_phone"
-                name="contact_phone"
+                type="number"
+                id="contactPhone"
+                name="contactPhone"
                 className="border rounded w-full py-2 px-3"
                 placeholder="Contact Phone"
                 required
                 value={contactPhone}
+                maxLength={9}
+                minLength={9}
                 onChange={(e) => setContactPhone(e.target.value)}
               />
+              </div>
             </div>
-            {/* <div className="mb-4">
+            <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">CV</label>
               <input
                 type="file"
                 id="cv"
                 name="cv"
                 className="border rounded w-full py-2 px-3"
+                required
+                accept="application/pdf"
                 value={cv}
                 onChange={(e) => setCv(e.target.value)}
               />
-            </div> */}
+            </div>
 
             <div>
               <button
