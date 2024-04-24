@@ -2,16 +2,23 @@ import { Link, useParams } from "react-router-dom";
 import { FaArrowLeft, FaMapMarker } from "react-icons/fa";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Spinner from "../Components/Spinner";
 
 const ApplyJob = () => {
   const { id } = useParams();
   const [job, setJob] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const applyClick = () =>{
+    
+  }
 
   useEffect(() => {
     const fetchJob = async () => {
       try {
         const res = await axios.get(`/api/jobs/${id}`);
         setJob(res.data);
+        setLoading(false); 
       } catch (error) {
         console.error("Error fetching job:", error);
       }
@@ -19,11 +26,28 @@ const ApplyJob = () => {
     fetchJob();
   }, [id]);
 
-  if (!job) {
-    return <div>Loading...</div>;
+  if (loading) {
+    return <Spinner />;
   }
 
+  if (!job) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div>Couldn&apos;t find the requested job
+          <Link
+            to="/jobs"
+            className="text-indigo-500 hover:text-indigo-600 flex items-center"
+          > Back to Job Listings
+          </Link>
+        </div>
+      </div>
+    );
+  }
+  
+
   const isDeadlinePassed = new Date(job.deadline) < new Date();
+  const isDeadlineToday = new Date(job.deadline).getDate() === new Date().getDate();
+
 
   return (
     <>
@@ -106,8 +130,9 @@ const ApplyJob = () => {
 
               <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
                 <h3 className='text-xl font-bold mb-6'>Apply Job</h3>
-                {!isDeadlinePassed ? (
-                  <button
+                {!isDeadlinePassed || isDeadlineToday ? (
+                  <button 
+                  onClick={applyClick}
                     className='bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block'
                   >
                     Apply Job

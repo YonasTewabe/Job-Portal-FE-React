@@ -27,10 +27,6 @@ const ValidatedLoginForm = () => {
       return;
     }
 
-    // Continue with login logic
-    console.log("Logging in", { email, password });
-
-    // Reset form
     setEmail("");
     setPassword("");
 
@@ -64,6 +60,7 @@ const ValidatedLoginForm = () => {
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="w-full max-w-md bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <p className="text-2xl text-indigo-700 text-center">Login</p>
         <form onSubmit={handleSubmit} className="max-w-sm mx-auto mt-8">
           <div className="mb-4">
             <label
@@ -123,10 +120,10 @@ const ValidatedLoginForm = () => {
             Forgot Password?
           </Link>
           <span className="text-sm">
-            Don&apos;t have an account yet?{" "}
+            Don&apos;t have an account yet?
             <Link to="/signup" className="text-blue-500">
-              Sign Up{" "}
-            </Link>{" "}
+              Sign Up
+            </Link>
           </span>
         </div>
       </div>

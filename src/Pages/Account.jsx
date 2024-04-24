@@ -1,10 +1,52 @@
-import { useLoaderData, Link } from "react-router-dom";
-
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
+import { useLoaderData, Link, useNavigate } from "react-router-dom";
+// import { Document, Page } from '@react-pdf/renderer';
+// import { Viewer } from '@react-pdf-viewer/core';
+// import '@react-pdf-viewer/core/lib/styles/index.css';
+// import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import axios from "axios";
 
-// eslint-disable-next-line react-refresh/only-export-components
-const Account = () => {
+// eslint-disable-next-line react-refresh/only-export-components, react/prop-types
+const Account = ({ deleteUser }) => {
   const user = useLoaderData();
+  const navigate = useNavigate();
+
+  const onDelete = (userId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await deleteUser(userId);
+        toast.success("Account Deleted Successfully");
+
+        navigate("/signup");
+      }
+    });
+  };
+
+  const renderCV = (cv) => {
+    if (cv) {
+      return (
+        <div>
+        
+          <button onClick={() => window.open(`http://localhost:5000/uploads/${cv}`, '_blank')} className="ml-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-1 px-2 rounded-full focus:outline-none focus:shadow-outline">
+            Download CV
+          </button>
+        </div>
+      );
+    } else {
+      return <p>No CV uploaded</p>;
+    }
+  };
+  
+
   return (
     <>
       <section className="bg-indigo-50">
@@ -44,9 +86,7 @@ const Account = () => {
               </p>
               <h3 className="text-xl font-bold">CV:</h3>
 
-                <p className="my-2 bg-indigo-100 p-2 font-bold">
-                  {user.cv}
-                </p>
+              {renderCV(user.cv)}
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h3 className="text-indigo-800 text-lg font-bold mb-6">
@@ -62,7 +102,7 @@ const Account = () => {
               <h3 className="text-xl font-bold">Phone Number:</h3>
 
               <p className="my-2 bg-indigo-100 p-2 font-bold">
-                {user.contactPhone}
+                +251 {user.contactPhone}
               </p>
             </div>
             <Link
@@ -71,6 +111,12 @@ const Account = () => {
             >
               Edit Information
             </Link>
+            <button
+              onClick={() => onDelete(user.id)}
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+            >
+              Delete Account
+            </button>
           </div>
         </div>
       </section>
