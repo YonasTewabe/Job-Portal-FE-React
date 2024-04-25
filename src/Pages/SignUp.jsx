@@ -65,6 +65,7 @@ navigate('/login')
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="w-full max-w-md bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <p className="text-2xl text-indigo-700 text-center">Sign Up</p>
         <form onSubmit={handleSubmit} className="max-w-sm mx-auto mt-8">
           <div className="mb-4">
             <label

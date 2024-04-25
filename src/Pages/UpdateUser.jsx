@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useLoaderData, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLoaderData } from "react-router-dom";
 import { toast } from "react-toastify";
 
 // eslint-disable-next-line react/prop-types, no-unused-vars
@@ -20,46 +20,38 @@ const UpdateUser = ({ updateInformationSubmit }) => {
 
   const submitForm = async (e) => {
     e.preventDefault();
-  
-    const updatedInformation = {
-      fullname,
-      age,
-      sex,
-      experience,
-      degree,
-      university,
-      contactEmail,
-      contactPhone,
-    };
-  
-   
-  
-  const updateInformationSubmit = async (id, updatedInformation) => {
+
+    const formData = new FormData();
+    formData.append("file", cv); // Assuming `cv` is the file object
+    formData.append("fullname", fullname);
+    formData.append("age", age);
+    formData.append("sex", sex);
+    formData.append("degree", degree);
+    formData.append("university", university);
+    formData.append("experience", experience);
+    formData.append("contactEmail", contactEmail);
+    formData.append("contactPhone", contactPhone);
+
     try {
       const response = await fetch(`http://localhost:5000/profile/${id}`, {
         method: "PATCH",
         headers: {
-          "Content-Type": "application/json",
+          // No need to set Content-Type, FormData will set it automatically
         },
-        body: JSON.stringify(updatedInformation),
+        body: formData,
       });
-  
+
       if (!response.ok) {
         throw new Error("Failed to update information");
       }
+
+      toast.success("Information Updated Successfully");
+      navigate(`/account/${id}`);
     } catch (error) {
-      throw new Error("Failed to update information");
+      toast.error("Failed to update information. Please try again.");
+      console.log(error.message);
     }
   };
-  try {
-    await updateInformationSubmit(id, updatedInformation);
-    toast.success("Information Updated Successfully");
-    navigate(`/account/${id}`);
-  } catch (error) {
-    toast.error("Failed to update information. Please try again.");
-    console.log(error.message)
-  }
-};
 
   return (
     <section className="bg-indigo-50">
@@ -69,7 +61,6 @@ const UpdateUser = ({ updateInformationSubmit }) => {
             <h2 className="text-3xl text-center font-semibold mb-6">
               Complete Information
             </h2>
-
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">
                 Full Name
@@ -150,36 +141,37 @@ const UpdateUser = ({ updateInformationSubmit }) => {
 
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">
-                Univeristy
+                University
               </label>
               <input
                 type="text"
-                id="University"
-                name="University"
+                id="university"
+                name="university"
                 className="border rounded w-full py-2 px-3 mb-2"
-                placeholder="University or Collage Attended"
+                placeholder="University or College Attended"
                 required
                 value={university}
                 onChange={(e) => setUniversity(e.target.value)}
               />
             </div>
+
             <div className="mb-4">
               <label
-                htmlFor="type"
+                htmlFor="experience"
                 className="block text-gray-700 font-bold mb-2"
               >
-                Expereince
+                Experience
               </label>
               <select
-                id="expereince"
-                name="expereince"
+                id="experience"
+                name="experience"
                 className="border rounded w-full py-2 px-3"
                 value={experience}
                 required
                 onChange={(e) => setExpereince(e.target.value)}
               >
                 <option value="None">None</option>
-                <option value="less than 1 Year">Less than 1 Year</option>
+                <option value="Less than 1 Year">Less than 1 Year</option>
                 <option value="1 - 3 years">1 - 3 years</option>
                 <option value="3 - 5 years">3 - 5 years</option>
                 <option value="5+ years">5+ years</option>
@@ -192,16 +184,17 @@ const UpdateUser = ({ updateInformationSubmit }) => {
               </label>
               <input
                 type="email"
-                id="contact_email"
-                name="contact_email"
+                id="contactEmail"
+                name="contactEmail"
                 className="border rounded w-full py-2 px-3"
                 placeholder="Contact Email"
                 required
                 value={contactEmail}
                 onChange={(e) => setContactEmail(e.target.value)}
               />
-              </div>
-           <div className="mb-4">
+            </div>
+
+            <div className="mb-4">
               <label
                 htmlFor="contactPhone"
                 className="block text-gray-700 font-bold mb-2"
@@ -209,21 +202,22 @@ const UpdateUser = ({ updateInformationSubmit }) => {
                 Phone Number
               </label>
               <div className="flex">
-              <span className="border rounded-l py-2 px-3 bg-gray-200">+251</span>
-              <input
-                type="number"
-                id="contactPhone"
-                name="contactPhone"
-                className="border rounded w-full py-2 px-3"
-                placeholder="Contact Phone"
-                required
-                value={contactPhone}
-                maxLength={9}
-                minLength={9}
-                onChange={(e) => setContactPhone(e.target.value)}
-              />
+                <span className="border rounded-l py-2 px-3 bg-gray-200">+251</span>
+                <input
+                  type="number"
+                  id="contactPhone"
+                  name="contactPhone"
+                  className="border rounded w-full py-2 px-3"
+                  placeholder="Contact Phone"
+                  required
+                  value={contactPhone}
+                  maxLength={9}
+                  minLength={9}
+                  onChange={(e) => setContactPhone(e.target.value)}
+                />
               </div>
             </div>
+
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">CV</label>
               <input
@@ -231,10 +225,8 @@ const UpdateUser = ({ updateInformationSubmit }) => {
                 id="cv"
                 name="cv"
                 className="border rounded w-full py-2 px-3"
-                required
                 accept="application/pdf"
-                value={cv}
-                onChange={(e) => setCv(e.target.value)}
+                onChange={(e) => setCv(e.target.files[0])}
               />
             </div>
 
@@ -252,4 +244,5 @@ const UpdateUser = ({ updateInformationSubmit }) => {
     </section>
   );
 };
+
 export default UpdateUser;

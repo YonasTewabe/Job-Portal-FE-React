@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 const ValidatedLoginForm = () => {
   const [email, setEmail] = useState("");
@@ -9,29 +11,33 @@ const ValidatedLoginForm = () => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch("http://localhost:5000/profile/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    });
-
+  
     if (!validateForm()) {
       return;
     }
-
-    setEmail("");
-    setPassword("");
-
-    navigate("/");
+  
+    try {
+      const response = await axios.post("http://localhost:5000/profile/login", {
+        email,
+        password,
+      });
+  
+      Cookies.set("jwt", response.data.jwt, { expires: 1 }); // Set JWT as a cookie with 1 day expiry
+      Cookies.set("userId", response.data.profileId, { expires: 1 }); // Set userId as a cookie with 1 day expiry
+  
+      setEmail("");
+      setPassword("");
+  
+      navigate("/");
+    } catch (error) {
+      console.error("Login error:", error);
+      // Handle error, e.g., show a message to the user
+    }
+    
   };
+  
 
   const validateForm = () => {
     const schema = Yup.object().shape({
@@ -60,7 +66,7 @@ const ValidatedLoginForm = () => {
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="w-full max-w-md bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-      <p className="text-2xl text-indigo-700 text-center">Login</p>
+        <p className="text-2xl text-indigo-700 text-center">Login</p>
         <form onSubmit={handleSubmit} className="max-w-sm mx-auto mt-8">
           <div className="mb-4">
             <label

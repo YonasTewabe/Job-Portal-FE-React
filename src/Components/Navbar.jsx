@@ -3,8 +3,9 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { CiLogout } from "react-icons/ci";
 import { MdOutlineAccountCircle, MdSummarize } from "react-icons/md";
 import { GoPlusCircle } from "react-icons/go";
-import { useNavigate, NavLink, useParams } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
+import Cookies from "js-cookie";
 
 const Navbar = () => {
   const [nav, setNav] = useState(false);
@@ -45,13 +46,20 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
-  const logoutClick = async() => {
-    await fetch("http://localhost:5000/profile/logout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-    navigate("/login")
+  const handleLogout = async () => {
+    try {
+      await fetch("http://localhost:5000/profile/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      Cookies.remove("userId");
+      Cookies.remove("jwt");
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Handle error, e.g., show a message to the user
+    }
   };
 
   useEffect(() => {
@@ -62,7 +70,8 @@ const Navbar = () => {
     };
   }, []);
 
-  const { id } = useParams();
+  const storedId = Cookies.get("userId");
+  const value = storedId ? `/account/${storedId}` : "/";
 
   return (
     <div className="max-w-[1640px] mx-auto flex justify-between items-center p-1 shadow-sm bg-background fixed top-0 left-0 w-full z-50">
@@ -79,11 +88,11 @@ const Navbar = () => {
       </div>
 
       <div className="flex items-center">
-        <NavLink to={`/account/${id}`} className="text-white mr-4">
-          <MdOutlineAccountCircle size={30} />My Profile
+        <NavLink to={value} className="text-white mr-4">
+          <MdOutlineAccountCircle size={30} /> My Profile
         </NavLink>
-        <button className="text-white" onClick={logoutClick}>
-          <CiLogout size={30} />Logout
+        <button className="text-white" onClick={handleLogout}>
+          <CiLogout size={30} /> Logout
         </button>
       </div>
 

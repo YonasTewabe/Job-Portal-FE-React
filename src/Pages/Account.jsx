@@ -1,16 +1,14 @@
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-import { useLoaderData, Link, useNavigate } from "react-router-dom";
-// import { Document, Page } from '@react-pdf/renderer';
-// import { Viewer } from '@react-pdf-viewer/core';
-// import '@react-pdf-viewer/core/lib/styles/index.css';
-// import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import { useLoaderData, Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 // eslint-disable-next-line react-refresh/only-export-components, react/prop-types
 const Account = ({ deleteUser }) => {
   const user = useLoaderData();
   const navigate = useNavigate();
+  // eslint-disable-next-line no-unused-vars
+  const param = useParams()
 
   const onDelete = (userId) => {
     Swal.fire({

@@ -20,6 +20,9 @@ const ViewApplicants = () => {
           <h3 className="text-xl font-bold">Experience:</h3>
           <p className="my-2 bg-indigo-100 p-2 font-bold">{user.experience}</p>
 
+          <h3 className="text-xl font-bold">Applied On:</h3>
+          <p className="my-2 bg-indigo-100 p-2 font-bold">{}</p>
+
           <div className="flex justify-center items-center mt-4">
             <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mr-2">
               Accept

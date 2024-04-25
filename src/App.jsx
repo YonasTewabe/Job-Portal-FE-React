@@ -20,6 +20,7 @@ import AboutUs from "./Pages/AboutUs";
 import ViewStatus from "./Pages/ViewStatus";
 import AddHr from "./Pages/AddHr";
 import ChangePassword from "./Pages/ChangePassword";
+import Email from "./Pages/Email";
 
 const App = () => {
   // Add new job
@@ -51,8 +52,10 @@ const App = () => {
 
   const router = createBrowserRouter(
     createRoutesFromElements(
+      
         <Route path='/' element={<Layout />}>
         <Route index element={<HomePage />} />
+        <Route path='*' element={<NotFoundPage />} />
         <Route path='/jobs' element={<Jobs />} />
         <Route path='/report' element={<ViewReport />} />
         <Route path='/add-job' element={<AddJob addJobSubmit={addJob} />} />
@@ -61,7 +64,6 @@ const App = () => {
         <Route path='/edit-job/:id' element={<EditJob updateJobSubmit={updateJob} />} loader={jobLoader} />
         <Route path='/job/:id' element={<Job deleteJob={deleteJob} />} loader={jobLoader} />
         <Route path='/account/:id' element={<Account deleteUser={deleteUser} />} loader={userLoader} />
-        <Route path='*' element={<NotFoundPage />} />
         <Route path='/signup' element={<SignUp />} />
         <Route path='/login' element={<ValidatedLoginForm />} />
         <Route path='/applicants/:id' element={<ViewApplicants />} loader={userLoader} />
@@ -71,6 +73,8 @@ const App = () => {
         <Route path='/status' element={<ViewStatus />} />
         <Route path='/add-hr' element={<AddHr />} />
         <Route path='/changepassword/:id' element={<ChangePassword />} />
+        <Route path='/email' element={<Email />} />
+
       </Route>
     )
   );
