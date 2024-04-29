@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { BiShow, BiHide } from "react-icons/bi";
+
 import * as Yup from "yup";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -9,35 +11,36 @@ const ValidatedLoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!validateForm()) {
       return;
     }
-  
+
     try {
       const response = await axios.post("http://localhost:5000/profile/login", {
         email,
         password,
       });
-  
-      Cookies.set("jwt", response.data.jwt, { expires: 1 }); // Set JWT as a cookie with 1 day expiry
-      Cookies.set("userId", response.data.profileId, { expires: 1 }); // Set userId as a cookie with 1 day expiry
-  
+
+      Cookies.set("jwt", response.data.jwt, { expires: 1 });
+      Cookies.set("userId", response.data.profileId, { expires: 1 });
+      localStorage.setItem("usercompleted", response.data.usercompleted);
+      localStorage.setItem("hrcompleted", response.data.hrcompleted);
+      localStorage.setItem("role", response.data.role);
+      
       setEmail("");
       setPassword("");
-  
-      navigate("/");
+      navigateAfterLogin();
     } catch (error) {
       console.error("Login error:", error);
-      // Handle error, e.g., show a message to the user
+      setErrors({ login: "Invalid email or password" });
     }
-    
   };
-  
 
   const validateForm = () => {
     const schema = Yup.object().shape({
@@ -63,10 +66,25 @@ const ValidatedLoginForm = () => {
     }
   };
 
+  const navigateAfterLogin = () => {
+    const role = localStorage.getItem("role");
+    const usercompleted = localStorage.getItem("usercompleted");
+    const hrcompleted = localStorage.getItem("hrcompleted");
+
+    if (usercompleted === "true" || hrcompleted === "true") {
+      navigate("/");
+    } else if (role === 'user' && usercompleted !== "true") {
+      navigate(`/UpdateUser/${Cookies.get("userId")}`);
+    } else if (role === 'hr' && hrcompleted !== "true") {
+      navigate(`/register/${Cookies.get("userId")}`);
+    }
+  };
+
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="w-full max-w-md bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <p className="text-2xl text-indigo-700 text-center">Login</p>
+        {errors.login && <div className="text-red-500 text-sm text-center">{errors.login}</div>}
         <form onSubmit={handleSubmit} className="max-w-sm mx-auto mt-8">
           <div className="mb-4">
             <label
@@ -96,10 +114,11 @@ const ValidatedLoginForm = () => {
             >
               Password
             </label>
+            <div  className="relative">
             <input
               id="password"
               name="password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -110,6 +129,15 @@ const ValidatedLoginForm = () => {
             {errors.password && (
               <div className="text-red-500 text-sm">{errors.password}</div>
             )}
+             <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <BiHide /> : <BiShow />}
+              </button>
+            </div>
+          
 
             <div className="text-center mt-6">
               <button

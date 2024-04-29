@@ -1,6 +1,9 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useState } from "react";
 import { useParams, useNavigate, useLoaderData } from "react-router-dom";
+import axios from "../axiosInterceptor";
 import { toast } from "react-toastify";
+import withAuth from "../withAuth";
 
 // eslint-disable-next-line react/prop-types, no-unused-vars
 const UpdateUser = ({ updateInformationSubmit }) => {
@@ -12,8 +15,7 @@ const UpdateUser = ({ updateInformationSubmit }) => {
   const [university, setUniversity] = useState(user.university);
   const [experience, setExpereince] = useState(user.experience || 'None');
   const [cv, setCv] = useState(user.cv);
-  const [contactEmail, setContactEmail] = useState(user.contactEmail);
-  const [contactPhone, setContactPhone] = useState(user.contactPhone);
+  const [userPhone, setUserPhone] = useState(user.userPhone);
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -22,21 +24,18 @@ const UpdateUser = ({ updateInformationSubmit }) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("file", cv); // Assuming `cv` is the file object
+    formData.append("file", cv);
     formData.append("fullname", fullname);
     formData.append("age", age);
     formData.append("sex", sex);
     formData.append("degree", degree);
     formData.append("university", university);
     formData.append("experience", experience);
-    formData.append("contactEmail", contactEmail);
-    formData.append("contactPhone", contactPhone);
+    formData.append("userPhone", userPhone);
 
     try {
-      const response = await fetch(`http://localhost:5000/profile/${id}`, {
-        method: "PATCH",
+      const response = await axios.patch(`http://localhost:5000/profile/${id}`, {
         headers: {
-          // No need to set Content-Type, FormData will set it automatically
         },
         body: formData,
       });
@@ -44,7 +43,6 @@ const UpdateUser = ({ updateInformationSubmit }) => {
       if (!response.ok) {
         throw new Error("Failed to update information");
       }
-
       toast.success("Information Updated Successfully");
       navigate(`/account/${id}`);
     } catch (error) {
@@ -52,6 +50,7 @@ const UpdateUser = ({ updateInformationSubmit }) => {
       console.log(error.message);
     }
   };
+
 
   return (
     <section className="bg-indigo-50">
@@ -178,25 +177,10 @@ const UpdateUser = ({ updateInformationSubmit }) => {
               </select>
             </div>
 
-            <div className="mb-4">
-              <label className="block text-gray-700 font-bold mb-2">
-                Email Address
-              </label>
-              <input
-                type="email"
-                id="contactEmail"
-                name="contactEmail"
-                className="border rounded w-full py-2 px-3"
-                placeholder="Contact Email"
-                required
-                value={contactEmail}
-                onChange={(e) => setContactEmail(e.target.value)}
-              />
-            </div>
 
             <div className="mb-4">
               <label
-                htmlFor="contactPhone"
+                htmlFor="userPhone"
                 className="block text-gray-700 font-bold mb-2"
               >
                 Phone Number
@@ -205,15 +189,15 @@ const UpdateUser = ({ updateInformationSubmit }) => {
                 <span className="border rounded-l py-2 px-3 bg-gray-200">+251</span>
                 <input
                   type="number"
-                  id="contactPhone"
-                  name="contactPhone"
+                  id="userPhone"
+                  name="userPhone"
                   className="border rounded w-full py-2 px-3"
                   placeholder="Contact Phone"
                   required
-                  value={contactPhone}
+                  value={userPhone}
                   maxLength={9}
                   minLength={9}
-                  onChange={(e) => setContactPhone(e.target.value)}
+                  onChange={(e) => setUserPhone(e.target.value)}
                 />
               </div>
             </div>
@@ -245,4 +229,4 @@ const UpdateUser = ({ updateInformationSubmit }) => {
   );
 };
 
-export default UpdateUser;
+export default withAuth (UpdateUser);

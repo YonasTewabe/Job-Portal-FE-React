@@ -1,12 +1,16 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import emailjs from "@emailjs/browser";
 
 const ViewApplicants = () => {
   const [applicants, setApplicants] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [sortBy, setSortBy] = useState("name"); // Default sort by name
-  const [sortOrder, setSortOrder] = useState("asc"); // Default sort order ascending
+  const [user_email, setUser_email] = useState("");
+  const [userStatus, setUserStatus] = useState("");
+  const [userJob, setUserJob] = useState("");
   const jobId = Cookies.get("jobId");
 
   useEffect(() => {
@@ -29,13 +33,45 @@ const ViewApplicants = () => {
     fetchData();
   }, [jobId]); // Fetch data whenever jobId changes
 
+  const sendSuccessEmail = async (applicant) => {
+    const templateParams = {
+      user_email: applicant.contactemail,
+      job: "some job",
+      status: "Under consideration"
+    };
+    try {
+      await emailjs.send("service_3x8jcuo", "template_83v7x64", templateParams, "y83w0Ca7GiWwGGWO4");
+      console.log("Success email sent!");
+    } catch (error) {
+      console.error("Error sending success email:", error);
+    }
+  };
+
+  
+  const sendRejectEmail = async (applicant) => {
+    const templateParams = {
+      user_email: applicant.contactemail,
+      job: "some job",
+      status: "Rejected"
+    };
+    try {
+      await emailjs.send("service_3x8jcuo", "template_83v7x64", templateParams, "y83w0Ca7GiWwGGWO4");
+      console.log("Rejection email sent!");
+    } catch (error) {
+      console.error("Error sending rejection email:", error);
+    }
+  };
+
+
   const renderCV = (cv) => {
     if (cv) {
       return (
         <div>
           <button
-            onClick={() => window.open(`http://localhost:5000/uploads/${cv}`, '_blank')}
-            className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-1 px-2 rounded-full focus:outline-none focus:shadow-outline"
+            onClick={() =>
+              window.open(`http://localhost:5000/uploads/${cv}`, "_blank")
+            }
+            className="ml-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-1 px-2 rounded-full focus:outline-none focus:shadow-outline"
           >
             Download CV
           </button>
@@ -44,58 +80,51 @@ const ViewApplicants = () => {
     } else {
       return <p>No CV uploaded</p>;
     }
-  }
-
-    const acceptClick = async (applicantId) => {
-      try {
-        await axios.patch(`http://localhost:5000/application/${applicantId}`, {
-          status: "Accepted",
-        });
-        const updatedApplicants = applicants.map((applicant) =>
-          applicant.id === applicantId ? { ...applicant, status: "Accepted" } : applicant
-        );
-        setApplicants(updatedApplicants);
-      } catch (error) {
-        console.error("Error accepting application:", error);
-      }
-    };
-  
-    const rejectClick = async (applicantId) => {
-      try {
-        await axios.patch(`http://localhost:5000/application/${applicantId}`, {
-          status: "Rejected",
-        });
-        const updatedApplicants = applicants.map((applicant) =>
-          applicant.id === applicantId ? { ...applicant, status: "Rejected" } : applicant
-        );
-        setApplicants(updatedApplicants);
-      } catch (error) {
-        console.error("Error rejecting application:", error);
-      }
   };
 
-  const sortApplicants = (field) => {
-    if (field === sortBy) {
-      // If the same field is clicked, toggle the sort order
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    } else {
-      // If a new field is clicked, set it as the sort field and default to ascending order
-      setSortBy(field);
-      setSortOrder("asc");
+  const acceptClick = async (applicant) => {
+    try {
+      await axios.patch(`http://localhost:5000/application/${applicant.id}`, {
+        status: "Accepted",
+      });
+      const updatedApplicants = applicants.map((app) =>
+        app.id === applicant.id ? { ...app, status: "Accepted" } : app
+      );
+      setApplicants(updatedApplicants);
+
+      // Update the user email, job, and status
+      setUser_email(applicant.contactemail);
+      setUserStatus("Under consideration");
+      setUserJob("some job");
+
+      // Send the success email
+      sendSuccessEmail(applicant);
+    } catch (error) {
+      console.error("Error accepting application:", error);
     }
   };
 
-  // Apply sorting to sortedApplicants
-  const sortedApplicants = [...applicants];
-  sortedApplicants.sort((a, b) => {
-    let comparison = 0;
-    if (a[sortBy] < b[sortBy]) {
-      comparison = -1;
-    } else if (a[sortBy] > b[sortBy]) {
-      comparison = 1;
+  const rejectClick = async (applicant) => {
+    try {
+      await axios.patch(`http://localhost:5000/application/${applicant.id}`, {
+        status: "Rejected",
+      });
+      const updatedApplicants = applicants.map((app) =>
+        app.id === applicant.id ? { ...app, status: "Rejected" } : app
+      );
+      setApplicants(updatedApplicants);
+
+      // Update the user email, job, and status
+      setUser_email(applicant.contactemail);
+      setUserStatus("Rejected");
+      setUserJob("some job");
+
+      // Send the rejection email
+      sendRejectEmail(applicant);
+    } catch (error) {
+      console.error("Error rejecting application:", error);
     }
-    return sortOrder === "asc" ? comparison : -comparison;
-  });
+  };
 
   if (loading) {
     return <p>Loading...</p>;
@@ -104,62 +133,47 @@ const ViewApplicants = () => {
   return (
     <div className="container mx-auto py-10 px-6">
       <br />
-      <h1 className="text-3xl mb-6 text-indigo-700">
-        Applicants {" "}
-      </h1>
-      <div className="flex justify-end mb-4">
-        <label htmlFor="sort" className="mr-2">Sort by:</label>
-        <select
-          id="sort"
-          className="bg-white border border-gray-300 rounded-md px-3 py-1 focus:outline-none"
-          value={sortBy}
-          onChange={(e) => sortApplicants(e.target.value)}
-        >
-          <option value="fullname">Name</option>
-          <option value="education">Education</option>
-          <option value="experience">Experience</option>
-          <option value="applicationdate">Date Applied</option>
-          <option value="status">Status</option>
-        </select>
-        <select
-          id="order"
-          className="bg-white border border-gray-300 rounded-md px-3 py-1 focus:outline-none"
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
-        >
-          <option value="asc">Ascending</option>
-          <option value="desc">Descending</option>
-        </select>
-      </div>
-      <div className="grid grid-cols-1 bg-red-100 md:grid-cols-3 gap-2">
-        {sortedApplicants.map((applicant) => (
-          <div key={applicant.id} className="bg-white p-6 rounded-lg shadow-md text-center md:text-left">
+      <h1 className="text-3xl mb-6 text-indigo-700">Applicants </h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+        {applicants.map((applicant) => (
+          <div
+            key={applicant.id}
+            className="bg-white p-6 rounded-lg shadow-md text-center md:text-left"
+          >
             <h3 className="text-xl font-bold">Name:</h3>
             <p className="my-2 bg-indigo-100 p-2 font-bold">
               {applicant.fullname}
             </p>
             <h3 className="text-xl font-bold">Education:</h3>
-            <p className="my-2 bg-indigo-100 p-2 font-bold">{applicant.degree}</p>
+            <p className="my-2 bg-indigo-100 p-2 font-bold">
+              {applicant.degree}
+            </p>
+
             <h3 className="text-xl font-bold">University:</h3>
             <p className="my-2 bg-indigo-100 p-2 font-bold">
               {applicant.university}
             </p>
+
             <h3 className="text-xl font-bold">Experience:</h3>
             <p className="my-2 bg-indigo-100 p-2 font-bold">
               {applicant.experience}
             </p>
+
             <h3 className="text-xl font-bold">Email Address:</h3>
             <p className="my-2 bg-indigo-100 p-2 font-bold">
               {applicant.contactemail}
             </p>
+
             <h3 className="text-xl font-bold">Phone Number:</h3>
             <p className="my-2 bg-indigo-100 p-2 font-bold">
-             +251  {applicant.contactphone}
+              {applicant.contactphone}
             </p>
+
             <h3 className="text-xl font-bold">CV:</h3>
             <p className="my-2 bg-indigo-100 p-2 font-bold">
               {renderCV(applicant.cv)}
             </p>
+
             <h3 className="text-xl font-bold">Applied On:</h3>
             <p className="my-2 bg-indigo-100 p-2 font-bold">
               {applicant.applicationdate}
@@ -168,14 +182,16 @@ const ViewApplicants = () => {
               {applicant.status === "Pending" ? (
                 <>
                   <button
-                    className="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mr-2"
-                    onClick={() => acceptClick(applicant.id)}
+                    type="button"
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mr-2"
+                    onClick={() => acceptClick(applicant)}
                   >
                     Accept
                   </button>
                   <button
-                    className="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full mr-2"
-                    onClick={() => rejectClick(applicant.id)}
+                    type="button"
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full mr-2"
+                    onClick={() => rejectClick(applicant)}
                   >
                     Reject
                   </button>
