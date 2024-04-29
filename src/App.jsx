@@ -8,7 +8,7 @@ import AddJob from "./Pages/AddJob";
 import EditJob from "./Pages/EditJob";
 import CompleteAccount from "./Pages/CompleteAccount"
 import ViewReport from "./Pages/ViewReport";
-import axios from "axios";
+import axios from "./axiosInterceptor";
 import Account, { userLoader } from "./Pages/Account";
 import UpdateUser from "./Pages/UpdateUser";
 import SignUp from "./Pages/SignUp";
@@ -21,6 +21,7 @@ import ViewStatus from "./Pages/ViewStatus";
 import AddHr from "./Pages/AddHr";
 import ChangePassword from "./Pages/ChangePassword";
 import Email from "./Pages/Email";
+import UnauthorizedAccess from "./Pages/UnautorizedAccess";
 
 const App = () => {
   // Add new job
@@ -59,7 +60,7 @@ const App = () => {
         <Route path='/jobs' element={<Jobs />} />
         <Route path='/report' element={<ViewReport />} />
         <Route path='/add-job' element={<AddJob addJobSubmit={addJob} />} />
-        <Route path='/register' element={<CompleteAccount userInformationSubmit={completeInfo} />} />
+        <Route path='/register/:id' element={<CompleteAccount updateInformationSubmit={completeInfo} loader={userLoader} />} />
         <Route path='/UpdateUser/:id' element={<UpdateUser updateInformationSubmit={updatedInfo} />} loader={userLoader} />
         <Route path='/edit-job/:id' element={<EditJob updateJobSubmit={updateJob} />} loader={jobLoader} />
         <Route path='/job/:id' element={<Job deleteJob={deleteJob} />} loader={jobLoader} />
@@ -74,6 +75,7 @@ const App = () => {
         <Route path='/add-hr' element={<AddHr />} />
         <Route path='/changepassword/:id' element={<ChangePassword />} />
         <Route path='/email' element={<Email />} />
+        <Route path='/unauthorized' element={<UnauthorizedAccess />} />
 
       </Route>
     )
