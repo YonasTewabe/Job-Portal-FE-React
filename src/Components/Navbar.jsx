@@ -1,17 +1,22 @@
 import { useState, useEffect, useRef } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import { CiLogout } from "react-icons/ci";
+import { CiLogout, CiViewList } from "react-icons/ci";
 import { MdOutlineAccountCircle, MdSummarize } from "react-icons/md";
+import { IoMdPersonAdd } from "react-icons/io";
 import { GoPlusCircle } from "react-icons/go";
 import { useNavigate, NavLink } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
 import Cookies from "js-cookie";
+import axios from "../axiosInterceptor"
 
 const Navbar = () => {
   const [nav, setNav] = useState(false);
   const sidebarRef = useRef(null);
   const linkClass = ({ isActive }) => (isActive ? "text-[#3b82f6]" : "");
-  const menuItems = [
+
+  const role = localStorage.getItem("role");
+ 
+  const hrMenu = [
     {
       icon: <FaHome size={25} className="mr-4" />,
       text: "Home",
@@ -29,13 +34,55 @@ const Navbar = () => {
       text: "Your Jobs",
       link: "/jobs",
       className: { linkClass },
+    }
+  ];
+
+  const adminMenu = [
+    {
+      icon: <FaHome size={25} className="mr-4" />,
+      text: "Home",
+      link: "/",
+      className: { linkClass },
+    },
+    {
+      icon: <GoPlusCircle size={25} className="mr-4" />,
+      text: "Add Job",
+      link: "/add-job",
+      className: { linkClass },
+    },   
+     {
+      icon: <IoMdPersonAdd size={25} className="mr-4" />,
+      text: "Add Hr",
+      link: "/add-hr",
+      className: { linkClass },
     },
     {
       icon: <MdSummarize size={25} className="mr-4" />,
-      text: "View Report",
-      link: "/report",
+      text: "Your Jobs",
+      link: "/jobs",
+      className: { linkClass },
+    }
+  ];
+
+  const userMenu = [
+    {
+      icon: <FaHome size={25} className="mr-4" />,
+      text: "Home",
+      link: "/",
+      className: { linkClass },
+    }, 
+     {
+      icon: <CiViewList size={25} className="mr-4" />,
+      text: "All Jobs",
+      link: "/jobs",
       className: { linkClass },
     },
+    {
+      icon: <MdSummarize size={25} className="mr-4" />,
+      text: "Applied Jobs",
+      link: "/status",
+      className: { linkClass },
+    }
   ];
 
   const handleOutsideClick = (e) => {
@@ -48,19 +95,21 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:5000/profile/logout", {
-        method: "POST",
+      await axios.post("http://localhost:5000/profile/logout", {
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
+        withCredentials: true,
       });
       Cookies.remove("userId");
       Cookies.remove("jwt");
-      navigate("/login");
+      localStorage.removeItem("role");
+      localStorage.removeItem("completed");
+      navigate("/login", { replace: true }); // Redirect to login and replace current entry in history
     } catch (error) {
       console.error("Logout error:", error);
       // Handle error, e.g., show a message to the user
     }
   };
+  
 
   useEffect(() => {
     document.addEventListener("mousedown", handleOutsideClick);
@@ -73,8 +122,14 @@ const Navbar = () => {
   const storedId = Cookies.get("userId");
   const value = storedId ? `/account/${storedId}` : "/";
 
+  // Check if role is set to "User", "Admin", or "HR"
+ 
+  if (role !== "user" && role !== "admin" && role !== "hr") {
+    return null; // If role is not one of these, do not render the navbar
+  }
+
   return (
-    <div className="max-w-[1640px] mx-auto flex justify-between items-center p-1 shadow-sm bg-background fixed top-0 left-0 w-full z-50">
+    <div className="max-w-[1940px] mx-auto flex justify-between items-center p-1 shadow-sm bg-background fixed top-0 left-0 w-full z-50">
       <div className="flex items-center">
         <div onClick={() => setNav(!nav)} className="cursor-pointer text-white">
           <AiOutlineMenu size={30} />
@@ -111,7 +166,29 @@ const Navbar = () => {
         </div>
         <nav>
           <ul className="flex flex-col p-4 text-gray-800">
-            {menuItems.map(({ icon, text, link }, index) => {
+            {role=='user' && userMenu.map(({ icon, text, link }, index) => {
+              return (
+                <div key={index} className=" py-4">
+                  <NavLink to={link} className={linkClass} onClick={() => setNav(false)}>
+                    <li className="text-xl flex cursor-pointer  w-[95%] mx-auto hover:bg-[#e1e9f0]">
+                      {icon} {text}
+                    </li>
+                  </NavLink>
+                </div>
+              );
+            })}
+             {role=='admin' && adminMenu.map(({ icon, text, link }, index) => {
+              return (
+                <div key={index} className=" py-4">
+                  <NavLink to={link} className={linkClass} onClick={() => setNav(false)}>
+                    <li className="text-xl flex cursor-pointer  w-[95%] mx-auto hover:bg-[#e1e9f0]">
+                      {icon} {text}
+                    </li>
+                  </NavLink>
+                </div>
+              );
+            })}
+             {role=='hr' && hrMenu.map(({ icon, text, link }, index) => {
               return (
                 <div key={index} className=" py-4">
                   <NavLink to={link} className={linkClass} onClick={() => setNav(false)}>

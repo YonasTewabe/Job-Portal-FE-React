@@ -32,7 +32,7 @@ const JobListing = ({job}) => {
           to={`/job/${job.id}`}
           className="h-[36px] bg-red-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg text-center text-sm"
         >
-          Manage Job
+          View Job
         </Link>
       </div>
     </div>

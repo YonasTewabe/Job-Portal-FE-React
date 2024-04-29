@@ -1,8 +1,10 @@
+/* eslint-disable react-refresh/only-export-components */
 import { Link, useParams } from "react-router-dom";
 import { FaArrowLeft, FaMapMarker } from "react-icons/fa";
-import axios from "axios";
+import axios from '../axiosInterceptor';
 import { useEffect, useState } from "react";
 import Spinner from "../Components/Spinner";
+import withAuth from "../withAuth";
 
 const ApplyJob = () => {
   const { id } = useParams();
@@ -10,8 +12,20 @@ const ApplyJob = () => {
   const [loading, setLoading] = useState(true);
 
   const applyClick = () =>{
-    
-  }
+  //   await fetch ('http://localhost:5000/application/apply', {
+  //     method: 'POST',
+  //     headers: {'Content-Type': 'application/json'},
+  //     body: JSON.stringify({
+  //       companyName,
+  //       jobTitle,
+  //       jobId,
+  //       fullname,
+  //       contactEmail,
+  //       applicationdate,
+  //       status
+  //   })
+  // })
+}
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -43,10 +57,11 @@ const ApplyJob = () => {
       </div>
     );
   }
-  
+  const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
 
+  const isDeadlineTomorrow = new Date(job.deadline).getDate() === tomorrow.getDate();
   const isDeadlinePassed = new Date(job.deadline) < new Date();
-  const isDeadlineToday = new Date(job.deadline).getDate() === new Date().getDate();
 
 
   return (
@@ -124,13 +139,13 @@ const ApplyJob = () => {
                 <h3 className='text-xl'>Contact Phone:</h3>
 
                 <p className='my-2 bg-indigo-100 p-2 font-bold'>
-                  {job.contactPhone}
+                  {job.companyPhone}
                 </p>
               </div>
 
               <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
                 <h3 className='text-xl font-bold mb-6'>Apply Job</h3>
-                {!isDeadlinePassed || isDeadlineToday ? (
+                {!isDeadlinePassed || isDeadlineTomorrow ? (
                   <button 
                   onClick={applyClick}
                     className='bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block'
@@ -154,4 +169,4 @@ const ApplyJob = () => {
   );
 };
 
-export default ApplyJob;
+export default withAuth (ApplyJob);

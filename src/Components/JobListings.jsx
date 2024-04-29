@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from '../axiosInterceptor';
 import JobListing from "./JobListing";
 import Spinner from "./Spinner";
 

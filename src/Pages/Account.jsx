@@ -1,7 +1,9 @@
+/* eslint-disable react-refresh/only-export-components */
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { useLoaderData, Link, useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import axios from '../axiosInterceptor';
+import withAuth from '../withAuth';
 
 // eslint-disable-next-line react-refresh/only-export-components, react/prop-types
 const Account = ({ deleteUser }) => {
@@ -9,6 +11,7 @@ const Account = ({ deleteUser }) => {
   const navigate = useNavigate();
   // eslint-disable-next-line no-unused-vars
   const param = useParams()
+  const role = localStorage.getItem("role");
 
   const onDelete = (userId) => {
     Swal.fire({
@@ -34,7 +37,8 @@ const Account = ({ deleteUser }) => {
       return (
         <div>
         
-          <button onClick={() => window.open(`http://localhost:5000/uploads/${cv}`, '_blank')} className="ml-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-1 px-2 rounded-full focus:outline-none focus:shadow-outline">
+          <button onClick={() => window.open(`http://localhost:5000/uploads/${cv}`, '_blank')} 
+          className="ml-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-1 px-2 rounded-full focus:outline-none focus:shadow-outline">
             Download CV
           </button>
         </div>
@@ -49,6 +53,7 @@ const Account = ({ deleteUser }) => {
     <>
       <section className="bg-indigo-50">
         <div className="container m-auto py-10 px-6">
+         <div>{role == 'user' &&
           <div className="grid grid-cols-1  w-full gap-6">
             <div className="bg-white p-6 rounded-lg shadow-md md:text-left">
               <h3 className="text-indigo-800 text-lg font-bold mb-6">
@@ -94,20 +99,27 @@ const Account = ({ deleteUser }) => {
               <h3 className="text-xl font-bold">Email Address:</h3>
 
               <p className="my-2 bg-indigo-100 p-2 font-bold">
-                {user.contactEmail}
+                {user.email}
               </p>
 
               <h3 className="text-xl font-bold">Phone Number:</h3>
 
               <p className="my-2 bg-indigo-100 p-2 font-bold">
-                +251 {user.contactPhone}
+                +251 {user.userPhone}
               </p>
-            </div>
-            <Link
+            </div></div>}
+            <div className="bg-white p-6 rounded-lg shadow-md mt-6">
+            { role=='user' && <Link
               to={`/UpdateUser/${user.id}`}
               className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
             >
-              Edit Information
+              Update Information
+            </Link>}
+            <Link
+              to={`/changepassword/${user.id}`}
+              className="bg-green-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+            >
+              Change Password
             </Link>
             <button
               onClick={() => onDelete(user.id)}
@@ -115,6 +127,7 @@ const Account = ({ deleteUser }) => {
             >
               Delete Account
             </button>
+          </div>
           </div>
         </div>
       </section>
@@ -127,4 +140,5 @@ const userLoader = async ({ params }) => {
   return res.data;
 };
 
-export { Account as default, userLoader };
+export { Account, userLoader };
+export default withAuth (Account);

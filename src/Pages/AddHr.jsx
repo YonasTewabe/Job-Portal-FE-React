@@ -1,6 +1,10 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useState } from "react";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import { BiShow, BiHide } from "react-icons/bi";
+import withAuth from "../withAuth";
+import { toast } from "react-toastify";
 
 const AddHr = () => {
     const [email, setEmail] = useState('');
@@ -8,6 +12,8 @@ const AddHr = () => {
     const [role, setRole] = useState('hr');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [errors, setErrors] = useState({});
     const navigate = useNavigate()
   
@@ -19,17 +25,26 @@ const AddHr = () => {
       if (!validateForm()) {
         return;
       }
-      await fetch('http://localhost:5000/profile/signup', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          email,
-          password,
-          role
+      try {
+        await fetch('http://localhost:5000/profile/signup', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            email,
+            password,
+            role
+          })
+        });
+        toast.success("Succesfully added new HR.");
+        navigate('/');
+      } catch (error) {
+        if (error.response && error.response.status === 409) {
+          toast.error("Email already in use");
+        } else {
+          toast.error("Failed to add. Please try again later.");
         }
-      )
-    })
-  navigate('/login')
+        console.error(error);
+      }
     }
   
     const validateForm = () => {
@@ -89,16 +104,17 @@ const AddHr = () => {
                 <div className="text-red-500 text-sm">{errors.email}</div>
               )}
   
-              <label
-                htmlFor="password"
-                className="block text-gray-700 text-sm font-bold mt-6 mb-2"
-              >
-                Password
-              </label>
+  <label
+              htmlFor="password"
+              className="block text-gray-700 text-sm font-bold mt-6 mb-2"
+            >
+              Password
+            </label>
+            <div className="relative">
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -106,20 +122,29 @@ const AddHr = () => {
                   errors.password ? "border-red-500" : ""
                 }`}
               />
-              {errors.password && (
-                <div className="text-red-500 text-sm">{errors.password}</div>
-              )}
-  
-              <label
-                htmlFor="confirmPassword"
-                className="block text-gray-700 text-sm font-bold mt-6 mb-2"
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                onClick={() => setShowPassword(!showPassword)}
               >
-                Confirm Password
-              </label>
+                {showPassword ? <BiHide /> : <BiShow />}
+              </button>
+            </div>
+            {errors.password && (
+              <div className="text-red-500 text-sm">{errors.password}</div>
+            )}
+
+            <label
+              htmlFor="confirmPassword"
+              className="block text-gray-700 text-sm font-bold mt-6 mb-2"
+            >
+              Confirm Password
+            </label>
+            <div className="relative">
               <input
                 id="confirmPassword"
                 name="confirmPassword"
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 placeholder="Confirm your password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -127,10 +152,18 @@ const AddHr = () => {
                   errors.confirmPassword ? "border-red-500" : ""
                 }`}
               />
-              {errors.confirmPassword && (
-                <div className="text-red-500 text-sm">
-                  {errors.confirmPassword}
-                </div>
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? <BiHide /> : <BiShow />}
+              </button>
+            </div>
+            {errors.confirmPassword && (
+              <div className="text-red-500 text-sm">
+                {errors.confirmPassword}
+              </div>
               )}
               <button
                 type="submit"
@@ -145,4 +178,4 @@ const AddHr = () => {
     );
   };
   
-  export default AddHr
+  export default withAuth (AddHr);

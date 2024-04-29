@@ -1,8 +1,10 @@
-/* eslint-disable react/prop-types */
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import withAuth from "../withAuth";
+import axios from "../axiosInterceptor";
 
+// eslint-disable-next-line react/prop-types
 const AddJob = ({ addJobSubmit }) => {
   const [title, setTitle] = useState('');
   const [type, setType] = useState('Full-Time');
@@ -13,15 +15,14 @@ const AddJob = ({ addJobSubmit }) => {
   const [companyName, setCompanyName] = useState('');
   const [companyDescription, setCompanyDescription] = useState('');
   const [contactEmail, setContactEmail] = useState('');
-  const [contactPhone, setContactPhone] = useState('');
+  const [companyPhone, setCompanyPhone] = useState('');
   const [deadline, setDeadline] = useState('');
 
   const navigate = useNavigate();
 
   const submitForm = async (e) => {
     e.preventDefault();
-    await fetch("http://localhost:5000/jobs/create", {
-      method: "POST",
+    await axios.post("http://localhost:5000/jobs/create", {
       headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify({
@@ -35,7 +36,7 @@ const AddJob = ({ addJobSubmit }) => {
         companyName,
         companyDescription,
         contactEmail,
-        contactPhone,
+        companyPhone,
       }),
     });
     
@@ -46,18 +47,28 @@ const AddJob = ({ addJobSubmit }) => {
       return;
     }
 
-
-    try{
-    addJobSubmit(submitForm);
-    toast.success('Job Added Successfully');
-
-    return navigate('/jobs');
-    }
-    catch(error){
-      
+    try {
+      addJobSubmit(submitForm);
+      toast.success('Job Added Successfully');
+      return navigate('/jobs');
+    } catch(error) {
       toast.error("Failed to add new job. Please try again.");
     }
   };
+
+  // const role = localStorage.getItem('role');
+  // if (role !== 'hr' && role !== 'admin') {
+  //   return (
+  //     <section className='bg-indigo-50'>
+  //       <div className='container m-auto max-w-2xl py-24'>
+  //         <div className='bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0'>
+  //           <h2 className='text-3xl text-center font-semibold mb-6'>Unauthorized Access</h2>
+  //           <p className='text-center'>You do not have permission to access this page.</p>
+  //         </div>
+  //       </div>
+  //     </section>
+  //   );
+  // }
 
   return (
     <section className='bg-indigo-50'>
@@ -97,7 +108,7 @@ const AddJob = ({ addJobSubmit }) => {
                 id='title'
                 name='title'
                 className='border rounded w-full py-2 px-3 mb-2'
-                placeholder='eg. Beautiful Apartment In Miami'
+                placeholder='eg. Front-end Developer'
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -262,8 +273,8 @@ const AddJob = ({ addJobSubmit }) => {
                 className='border rounded w-full py-2 px-3'
                 placeholder='Phone Number for applicants'
                 required
-                value={contactPhone}
-                onChange={(e) => setContactPhone(e.target.value)}
+                value={companyPhone}
+                onChange={(e) => setCompanyPhone(e.target.value)}
               />
             </div>
 
@@ -281,4 +292,5 @@ const AddJob = ({ addJobSubmit }) => {
     </section>
   );
 };
-export default AddJob;
+
+export default withAuth(AddJob);

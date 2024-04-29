@@ -1,16 +1,35 @@
 /* eslint-disable react/prop-types */
-const Hero = (props) => {
+const role = localStorage.getItem("role");
+
+
+const Hero = () => {
   return (
     <section className="bg-background py-20 mb-4">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl">
-            {props.Title}
+      {role == 'user' && <div className="text-center">
+         <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl">
+         Find Your Next Job
           </h1>
           <p className="my-4 text-xl text-white">
-            {props.Subtitle}
+          Look for the job that fits your skills and needs
           </p>
-        </div>
+          </div>}
+          {(role == 'hr' ||  role == 'admin')  &&  <div className="text-center">
+          <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl">
+          Find Your Next Employee
+          </h1>
+          <p className="my-4 text-xl text-white">
+          Look for the employee that fits your needs and requirements
+          </p>
+        </div>} 
+        {/* { role == 'admin'  &&  <div className="text-center">
+          <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl">
+          Find Your Next Employee
+          </h1>
+          <p className="my-4 text-xl text-white">
+          Look for the employee that fits your needs and requirements
+          </p>
+        </div>} */}
       </div>
     </section>
   );
