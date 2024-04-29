@@ -1,4 +1,6 @@
+/* eslint-disable react-refresh/only-export-components */
 import JobListings from '../Components/JobListings';
+import withAuth from "../withAuth";
 
 const Jobs = () => {
   return (
@@ -8,4 +10,4 @@ const Jobs = () => {
   )
 }
 
-export default Jobs
+export default withAuth (Jobs)

@@ -1,16 +1,98 @@
-/* eslint-disable react/prop-types */
-import { useParams, useLoaderData, Link, useNavigate } from "react-router-dom";
+/* eslint-disable react-refresh/only-export-components */
+import { useLoaderData, Link, useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaMapMarker } from "react-icons/fa";
 import Swal from "sweetalert2";
-import axios from "axios";
+import axios from '../axiosInterceptor';
 import { toast } from "react-toastify";
+import { useState } from "react";
+import Cookies from "js-cookie";
+import withAuth from "../withAuth";
 
-// eslint-disable-next-line react-refresh/only-export-components
+
+// eslint-disable-next-line react/prop-types
 const Job = ({ deleteJob }) => {
-  // eslint-disable-next-line no-unused-vars
-  const { id } = useParams();
   const navigate = useNavigate();
   const job = useLoaderData();
+  const [user, setUser] = useState(null);
+
+  const role = localStorage.getItem("role");
+  const userId = Cookies.get("userId");
+
+  if (userId && !user) {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get(`http://localhost:5000/profile/${userId}`);
+        if (res.status === 200) {
+          setUser(res.data);
+        } else {
+          throw new Error("Failed to fetch user data");
+        }
+      } catch (error) {
+        console.error("Fetch user data error:", error);
+      }
+    };
+    console.log("Fetching user data...");
+    fetchUser();
+  }
+
+  const fullname = user ? user.fullname : "";
+  const jobtitle = job.title;
+  const companyname = job.companyName;
+  const applicationdate = new Date();
+  const status = 'Pending';
+  const contactemail = user ? user.email : "";
+  const userphone = user ? user.userPhone : "";
+  const university = user ? user.university : "";``
+  const degree = user ? user.degree : "";
+  const experience = user ? user.experience : "";
+  const jobid = job.id;
+  const userid = user ? user.id : "";
+
+
+  const submitForm = async (e) => {
+    e.preventDefault();
+    
+    try {
+      // Check if the user has already applied to this job
+      const existingApplication = await axios.get(`http://localhost:5000/application/check/${jobid}/${userid}`);
+      if (existingApplication.data) {
+        throw new Error("You have already applied to this job");
+      }
+  
+      // Submit the new application
+      await axios.post("http://localhost:5000/application/apply", {
+        jobtitle,
+        companyname,
+        fullname,
+        applicationdate,
+        status,
+        contactemail,
+        jobid,
+        userphone,
+        degree,
+        university,
+        experience,
+        userid
+      });
+  
+      toast.success("Application submitted successfully");
+      navigate('/jobs')
+    } catch (error) {
+      toast.error(error.message || "Failed to submit application");
+      console.error("Application submit error:", error);
+    }
+  };
+  
+ const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const isDeadlineTomorrow = new Date(job.deadline).getDate() === tomorrow.getDate();
+  const isDeadlinePassed = new Date(job.deadline) < new Date();
+
+
+  const handleViewApplicants = () => {
+    Cookies.set("jobId", job.id); // Set the job ID to cookies
+  };
 
   const onDeleteClick = (jobId) => {
     Swal.fire({
@@ -25,7 +107,6 @@ const Job = ({ deleteJob }) => {
       if (result.isConfirmed) {
         await deleteJob(jobId);
         toast.success("Job Deleted Successfully");
-
         navigate("/jobs");
       }
     });
@@ -87,7 +168,6 @@ const Job = ({ deleteJob }) => {
                 <p className="my-2 bg-indigo-100 p-2 font-bold">
                   {job.companyName}
                 </p>
-
                 <h3 className="text-xl"> Company Description:</h3>
                 <p className="my-2 bg-indigo-100 p-2 font-bold">
                   {job.companyDescription}
@@ -104,45 +184,64 @@ const Job = ({ deleteJob }) => {
                 <h3 className="text-xl">Contact Phone:</h3>
 
                 <p className="my-2 bg-indigo-100 p-2 font-bold">
-                  {" "}
-                  {job.contactPhone}
+                  {job.userPhone}
                 </p>
               </div>
             </aside>
           </div>
-  
 
-      {/* Manage Job Section */}
-      <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-        <h3 className="text-xl font-bold mb-6">Manage Job</h3>
-        <Link
-          to={`/edit-job/${job.id}`}
-          className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-        >
-          Edit Job
-        </Link>
-        <Link
-          to={`/applicants/${job.id}`}
-          className="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-        >
-          View Applicants
-        </Link>
-        <button
-          onClick={() => onDeleteClick(job.id)}
-          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-        >
-          Delete Job
-        </button>
-      </div>
-      </div>
+          {/* Manage Job Section */}
+         {(role == 'hr' || role == 'admin') && <div className="bg-white p-6 rounded-lg shadow-md mt-6">
+            <Link
+              to={`/edit-job/${job.id}`}
+              className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+            >
+              Edit Job
+            </Link>
+            <Link
+              to={`/applicants/${job.id}`}
+              onClick={handleViewApplicants}
+              className="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+            >
+              View Applicants
+            </Link>
+           
+            <button
+              onClick={() => onDeleteClick(job.id)}
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+            >
+              Delete Job
+            </button>
+          </div>}
+
+          { role == 'user' && <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
+          
+          {!isDeadlinePassed || isDeadlineTomorrow ? (
+                  <button 
+                  onClick={submitForm}
+                    className='bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block'
+                  >
+                    Apply Job
+                  </button>
+                ) : (
+                  <button
+                    className='bg-red-500 text-white font-bold py-2 px-4 rounded-full w-full cursor-not-allowed opacity-50 mt-4 block'
+                    disabled
+                  >
+                    Deadline Passed
+                  </button>
+                )}
+          </div>}
+        </div>
       </section>
     </>
   );
 };
 
 const jobLoader = async ({ params }) => {
-  const res = await axios.get(`/api/jobs/${params.id}`);
+  const res = await axios.get(`http://localhost:5000/jobs/${params.id}`);
   return res.data;
 };
 
-export { Job as default, jobLoader };
+export { Job , jobLoader };
+export default withAuth (Job)

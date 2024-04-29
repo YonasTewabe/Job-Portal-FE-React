@@ -1,12 +1,18 @@
 import { useState } from "react";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import { BiShow, BiHide } from "react-icons/bi";
+import { toast } from "react-toastify";
+
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
-  const [role, setRole] = useState('user');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  // eslint-disable-next-line no-unused-vars
+  const [role, setRole] = useState('user')
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate()
 
@@ -14,22 +20,34 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!validateForm()) {
       return;
     }
-    await fetch('http://localhost:5000/profile/signup', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        email,
-        password,
-        role
+   
+  
+    try {
+      await fetch('http://localhost:5000/profile/signup', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          email,
+          password,
+          role
+        })
+      });
+      toast.success("Sign up successful. Please log in.");
+      navigate('/login');
+    } catch (error) {
+      if (error.response && error.response.status === 409) {
+        toast.error("Email already in use");
+      } else {
+        toast.error("Failed to sign up. Please try again later.");
       }
-    )
-  })
-navigate('/login')
+      console.error(error);
+    }
   }
+  
 
   const validateForm = () => {
     const schema = Yup.object().shape({
@@ -65,7 +83,7 @@ navigate('/login')
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="w-full max-w-md bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-      <p className="text-2xl text-indigo-700 text-center">Sign Up</p>
+        <p className="text-2xl text-indigo-700 text-center">Sign Up</p>
         <form onSubmit={handleSubmit} className="max-w-sm mx-auto mt-8">
           <div className="mb-4">
             <label
@@ -95,17 +113,26 @@ navigate('/login')
             >
               Password
             </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={`border rounded py-2 px-3 w-full ${
-                errors.password ? "border-red-500" : ""
-              }`}
-            />
+            <div className="relative">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={`border rounded py-2 px-3 w-full ${
+                  errors.password ? "border-red-500" : ""
+                }`}
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <BiHide /> : <BiShow />}
+              </button>
+            </div>
             {errors.password && (
               <div className="text-red-500 text-sm">{errors.password}</div>
             )}
@@ -116,42 +143,30 @@ navigate('/login')
             >
               Confirm Password
             </label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              placeholder="Confirm your password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className={`border rounded py-2 px-3 w-full ${
-                errors.confirmPassword ? "border-red-500" : ""
-              }`}
-            />
+            <div className="relative">
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="Confirm your password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className={`border rounded py-2 px-3 w-full ${
+                  errors.confirmPassword ? "border-red-500" : ""
+                }`}
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? <BiHide /> : <BiShow />}
+              </button>
+            </div>
             {errors.confirmPassword && (
               <div className="text-red-500 text-sm">
                 {errors.confirmPassword}
               </div>
-            )}
-            <label
-              htmlFor="role"
-              className="block text-gray-700 text-sm font-bold mt-6 mb-2"
-            >
-              Role
-            </label>
-            <select
-              id="role"
-              name="role"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className={`border rounded py-2 px-3 w-full ${
-                errors.role ? "border-red-500" : ""
-              }`}
-            >
-              <option value="User">Job Seeker</option>
-              <option value="HR">Employer</option>
-            </select>
-            {errors.role && (
-              <div className="text-red-500 text-sm">{errors.role}</div>
             )}
             <button
               type="submit"
