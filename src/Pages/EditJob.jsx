@@ -1,7 +1,11 @@
+/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
 import { useParams, useLoaderData, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import axios from "../axiosInterceptor";
+import withAuth from "../withAuth";
+
 
 // eslint-disable-next-line no-unused-vars
 const EditJob = ({ updateJobSubmit }) => {
@@ -17,7 +21,7 @@ const EditJob = ({ updateJobSubmit }) => {
     job.companyDescription
   );
   const [contactEmail, setContactEmail] = useState(job.contactEmail);
-  const [contactPhone, setContactPhone] = useState(job.contactPhone);
+  const [companyPhone, setCompanyPhone] = useState(job.companyPhone);
   const [deadline, setDeadline] = useState(job.deadline);
 
 
@@ -38,12 +42,11 @@ const EditJob = ({ updateJobSubmit }) => {
       companyName,
       companyDescription,
       contactEmail,
-      contactPhone,
+      companyPhone,
     };
   
     try {
-      const response = await fetch(`http://localhost:5000/jobs/${id}`, {
-        method: "PATCH",
+      const response = await axios.patch(`http://localhost:5000/jobs/${id}`, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -269,8 +272,8 @@ const EditJob = ({ updateJobSubmit }) => {
                 className='border rounded w-full py-2 px-3'
                 placeholder='Phone Number for applicants'
                 required
-                value={contactPhone}
-                onChange={(e) => setContactPhone(e.target.value)}
+                value={companyPhone}
+                onChange={(e) => setCompanyPhone(e.target.value)}
               />
             </div>
 
@@ -289,4 +292,4 @@ const EditJob = ({ updateJobSubmit }) => {
     </section>
   );
 };
-export default EditJob;
+export default withAuth (EditJob);

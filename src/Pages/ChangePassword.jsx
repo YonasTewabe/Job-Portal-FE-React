@@ -1,54 +1,76 @@
+/* eslint-disable react-refresh/only-export-components */
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import { toast } from "react-toastify";
+import Cookies from "js-cookie";
+import withAuth from "../withAuth";
+import axios from "../axiosInterceptor";
 
-const ChangePassword = ({updatePassword}) => {
+
+const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
+  const [Password, setPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-  const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/;
+  const passwordRegex =
+    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/;
+
+  const id = Cookies.get("userId"); // Fetch userId from cookie
+
+  const formData = new FormData();
+  formData.append("password", Password);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const updatePassword = {
-        password
-    }
 
     if (!validateForm()) {
       return;
     }
 
-    
+    try {
+      const response = await axios.patch(`http://localhost:5000/profile/${id}`, {
+        headers: {},
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update information");
+      }
+
+      toast.success("Password changed Successfully");
+      navigate(`/account/${id}`); // Update the navigation path
+    } catch (error) {
+      toast.error("Failed to update information. Please try again.");
+      console.log(error.message);
+    }
 
     setCurrentPassword("");
-    setNewPassword("");
+    setPassword("");
     setConfirmNewPassword("");
-
-    navigate("/");
   };
 
   const validateForm = () => {
     const schema = Yup.object().shape({
       currentPassword: Yup.string().required("Current password is required"),
-      newPassword: Yup.string()
+      Password: Yup.string()
         .required("New password is required")
         .matches(
-            passwordRegex,
-            'Password must contain at least one number, one uppercase letter, one lowercase letter, and one special character'
-          )
+          passwordRegex,
+          "Password must contain at least one number, one uppercase letter, one lowercase letter, and one special character"
+        )
         .min(8, "Password must be at least 8 characters"),
       confirmNewPassword: Yup.string()
         .required("Confirm new password is required")
-        .oneOf([Yup.ref("newPassword"), null], "Passwords must match"),
+        .oneOf([Yup.ref("Password"), null], "Passwords must match"),
     });
 
     try {
       schema.validateSync(
-        { currentPassword, newPassword, confirmNewPassword },
+        { currentPassword, Password, confirmNewPassword },
         { abortEarly: false }
       );
       setErrors({});
@@ -103,8 +125,8 @@ const ChangePassword = ({updatePassword}) => {
               name="newPassword"
               type="password"
               placeholder="Enter your new password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
+              value={Password}
+              onChange={(e) => setPassword(e.target.value)}
               className={`border rounded py-2 px-3 w-full ${
                 errors.newPassword ? "border-red-500" : ""
               }`}
@@ -146,10 +168,9 @@ const ChangePassword = ({updatePassword}) => {
             </div>
           </div>
         </form>
-
       </div>
     </div>
   );
 };
 
-export default ChangePassword;
+export default withAuth (ChangePassword);
