@@ -6,7 +6,7 @@ import NotFoundPage from "./Pages/NotFoundPage";
 import Job, { jobLoader } from "./Pages/Job";
 import AddJob from "./Pages/AddJob";
 import EditJob from "./Pages/EditJob";
-import CompleteAccount from "./Pages/CompleteAccount"
+import CompleteAccount from "./Pages/UpdateCompany"
 import ViewReport from "./Pages/ViewReport";
 import axios from "./axiosInterceptor";
 import Account, { userLoader } from "./Pages/Account";
@@ -20,7 +20,6 @@ import AboutUs from "./Pages/AboutUs";
 import ViewStatus from "./Pages/ViewStatus";
 import AddHr from "./Pages/AddHr";
 import ChangePassword from "./Pages/ChangePassword";
-import Email from "./Pages/Email";
 import UnauthorizedAccess from "./Pages/UnautorizedAccess";
 
 const App = () => {
@@ -74,7 +73,6 @@ const App = () => {
         <Route path='/status' element={<ViewStatus />} />
         <Route path='/add-hr' element={<AddHr />} />
         <Route path='/changepassword/:id' element={<ChangePassword />} />
-        <Route path='/email' element={<Email />} />
         <Route path='/unauthorized' element={<UnauthorizedAccess />} />
 
       </Route>

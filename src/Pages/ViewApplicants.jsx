@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import emailjs from "@emailjs/browser";
+import Donut from './ViewReport'
 
 const ViewApplicants = () => {
   const [applicants, setApplicants] = useState([]);
@@ -11,6 +12,8 @@ const ViewApplicants = () => {
   const [user_email, setUser_email] = useState("");
   const [userStatus, setUserStatus] = useState("");
   const [userJob, setUserJob] = useState("");
+  const [sortCriterion, setSortCriterion] = useState('');
+  const [sortAscending, setSortAscending] = useState(true);
   const jobId = Cookies.get("jobId");
 
   useEffect(() => {
@@ -31,37 +34,7 @@ const ViewApplicants = () => {
     };
 
     fetchData();
-  }, [jobId]); // Fetch data whenever jobId changes
-
-  const sendSuccessEmail = async (applicant) => {
-    const templateParams = {
-      user_email: applicant.contactemail,
-      job: "some job",
-      status: "Under consideration"
-    };
-    try {
-      await emailjs.send("service_3x8jcuo", "template_83v7x64", templateParams, "y83w0Ca7GiWwGGWO4");
-      console.log("Success email sent!");
-    } catch (error) {
-      console.error("Error sending success email:", error);
-    }
-  };
-
-  
-  const sendRejectEmail = async (applicant) => {
-    const templateParams = {
-      user_email: applicant.contactemail,
-      job: "some job",
-      status: "Rejected"
-    };
-    try {
-      await emailjs.send("service_3x8jcuo", "template_83v7x64", templateParams, "y83w0Ca7GiWwGGWO4");
-      console.log("Rejection email sent!");
-    } catch (error) {
-      console.error("Error sending rejection email:", error);
-    }
-  };
-
+  }, [jobId]);
 
   const renderCV = (cv) => {
     if (cv) {
@@ -82,22 +55,80 @@ const ViewApplicants = () => {
     }
   };
 
+  const customSort = (applicants, criterion, isAscending) => {
+    const modifier = isAscending ? 1 : -1;
+    switch (criterion) {
+      case 'name':
+        return [...applicants].sort((a, b) => modifier * a.fullname.localeCompare(b.fullname));
+      case 'applicationDate':
+        return [...applicants].sort((a, b) => modifier * (new Date(a.applicationdate) - new Date(b.applicationdate)));
+      case 'status':
+        return [...applicants].sort((a, b) => modifier * a.status.localeCompare(b.status));
+      case 'education':
+        return [...applicants].sort((a, b) => modifier * a.degree.localeCompare(b.degree));
+      case 'experience':
+        return [...applicants].sort((a, b) => modifier * (a.experience - b.experience));
+      default:
+        return applicants;
+    }
+  };
+
+  const handleSortChange = (criterion) => {
+    if (sortCriterion === criterion) {
+      setSortAscending(!sortAscending);
+    } else {
+      setSortCriterion(criterion);
+      setSortAscending(true);
+    }
+  };
+
+  let sortedApplicants = [...applicants];
+  if (sortCriterion) {
+    sortedApplicants = customSort(sortedApplicants, sortCriterion, sortAscending);
+  }
+
+  const sendSuccessEmail = async (applicant) => {
+    const templateParams = {
+      user_email: applicant.contactemail,
+      job: applicant.jobtitle,
+      status: "Under consideration"
+    };
+    try {
+      await emailjs.send("service_3x8jcuo", "template_83v7x64", templateParams, "y83w0Ca7GiWwGGWO4");
+      console.log("Success email sent!");
+    } catch (error) {
+      console.error("Error sending success email:", error);
+    }
+  };
+
+  const sendRejectEmail = async (applicant) => {
+    const templateParams = {
+      user_email: applicant.contactemail,
+      job: applicant.jobtitle,
+      status: "Rejected"
+    };
+    try {
+      await emailjs.send("service_3x8jcuo", "template_83v7x64", templateParams, "y83w0Ca7GiWwGGWO4");
+      console.log("Rejection email sent!");
+    } catch (error) {
+      console.error("Error sending rejection email:", error);
+    }
+  };
+
   const acceptClick = async (applicant) => {
     try {
       await axios.patch(`http://localhost:5000/application/${applicant.id}`, {
-        status: "Accepted",
+        status: "Under Consideration",
       });
       const updatedApplicants = applicants.map((app) =>
-        app.id === applicant.id ? { ...app, status: "Accepted" } : app
+        app.id === applicant.id ? { ...app, status: "Under Consideration" } : app
       );
       setApplicants(updatedApplicants);
 
-      // Update the user email, job, and status
       setUser_email(applicant.contactemail);
       setUserStatus("Under consideration");
-      setUserJob("some job");
+      setUserJob(applicant.jobtitle);
 
-      // Send the success email
       sendSuccessEmail(applicant);
     } catch (error) {
       console.error("Error accepting application:", error);
@@ -114,12 +145,10 @@ const ViewApplicants = () => {
       );
       setApplicants(updatedApplicants);
 
-      // Update the user email, job, and status
       setUser_email(applicant.contactemail);
       setUserStatus("Rejected");
-      setUserJob("some job");
+      setUserJob(applicant.jobtitle);
 
-      // Send the rejection email
       sendRejectEmail(applicant);
     } catch (error) {
       console.error("Error rejecting application:", error);
@@ -131,11 +160,35 @@ const ViewApplicants = () => {
   }
 
   return (
-    <div className="container mx-auto py-10 px-6">
+    <div className="container mx-auto bg-indigo-100 py-10 px-6">
       <br />
-      <h1 className="text-3xl mb-6 text-indigo-700">Applicants </h1>
+      <h1 className="text-3xl mb-6 text-indigo-700">Applicants  </h1>
+      <div className="flex justify-end mb-4">
+        <select
+          id="sortCriterion"
+          className="p-2 border rounded"
+          value={sortCriterion}
+          onChange={(e) => handleSortChange(e.target.value)}
+        >
+          <option value="" disabled> Sort Applicants</option>
+          <option value="name">Applicant Name</option>
+          <option value="applicationDate">Application Date</option>
+          <option value="education">Education</option>
+          <option value="experience">Experience</option>
+          <option value="status">Status</option>
+        </select>
+        <select
+          id="sortOrder"
+          className="p-2 border rounded"
+          value={sortAscending ? "asc" : "desc"}
+          onChange={() => setSortAscending((prev) => !prev)}
+        >
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-        {applicants.map((applicant) => (
+        {sortedApplicants.map((applicant) => (
           <div
             key={applicant.id}
             className="bg-white p-6 rounded-lg shadow-md text-center md:text-left"
@@ -166,13 +219,11 @@ const ViewApplicants = () => {
 
             <h3 className="text-xl font-bold">Phone Number:</h3>
             <p className="my-2 bg-indigo-100 p-2 font-bold">
-              {applicant.contactphone}
+              {applicant.userphone}
             </p>
 
             <h3 className="text-xl font-bold">CV:</h3>
-            <p className="my-2 bg-indigo-100 p-2 font-bold">
               {renderCV(applicant.cv)}
-            </p>
 
             <h3 className="text-xl font-bold">Applied On:</h3>
             <p className="my-2 bg-indigo-100 p-2 font-bold">
@@ -197,11 +248,15 @@ const ViewApplicants = () => {
                   </button>
                 </>
               ) : (
-                <p className="text-xl font-bold">{applicant.status}</p>
+                <p className="text-xl font-bold">Status: {applicant.status}</p>
               )}
             </div>
           </div>
         ))}
+      </div>
+      <h1 className="text-3xl mb-6 text-indigo-700">Summary</h1>
+      <div className="bg-white p-6 rounded-lg shadow-md text-center md:text-left">
+        <Donut />
       </div>
     </div>
   );

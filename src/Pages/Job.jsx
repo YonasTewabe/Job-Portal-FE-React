@@ -2,12 +2,11 @@
 import { useLoaderData, Link, useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaMapMarker } from "react-icons/fa";
 import Swal from "sweetalert2";
-import axios from '../axiosInterceptor';
+import axios from "../axiosInterceptor";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import Cookies from "js-cookie";
 import withAuth from "../withAuth";
-
 
 // eslint-disable-next-line react/prop-types
 const Job = ({ deleteJob }) => {
@@ -35,30 +34,41 @@ const Job = ({ deleteJob }) => {
     fetchUser();
   }
 
+  const Datenow = new Date().toLocaleString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  });
+
   const fullname = user ? user.fullname : "";
   const jobtitle = job.title;
   const companyname = job.companyName;
-  const applicationdate = new Date();
-  const status = 'Pending';
+  const applicationdate = Datenow;
+  const status = "Pending";
   const contactemail = user ? user.email : "";
   const userphone = user ? user.userPhone : "";
-  const university = user ? user.university : "";``
+  const university = user ? user.university : "";
+  ``;
   const degree = user ? user.degree : "";
   const experience = user ? user.experience : "";
   const jobid = job.id;
   const userid = user ? user.id : "";
-
+  const cv = user ? user.cv : "";
 
   const submitForm = async (e) => {
     e.preventDefault();
-    
+
     try {
       // Check if the user has already applied to this job
-      const existingApplication = await axios.get(`http://localhost:5000/application/check/${jobid}/${userid}`);
+      const existingApplication = await axios.get(
+        `http://localhost:5000/application/check/${jobid}/${userid}`
+      );
       if (existingApplication.data) {
         throw new Error("You have already applied to this job");
       }
-  
+
       // Submit the new application
       await axios.post("http://localhost:5000/application/apply", {
         jobtitle,
@@ -72,23 +82,24 @@ const Job = ({ deleteJob }) => {
         degree,
         university,
         experience,
-        userid
+        userid,
+        cv,
       });
-  
+
       toast.success("Application submitted successfully");
-      navigate('/jobs')
+      navigate("/jobs");
     } catch (error) {
       toast.error(error.message || "Failed to submit application");
       console.error("Application submit error:", error);
     }
   };
-  
- const tomorrow = new Date();
-tomorrow.setDate(tomorrow.getDate() + 1);
 
-  const isDeadlineTomorrow = new Date(job.deadline).getDate() === tomorrow.getDate();
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const isDeadlineTomorrow =
+    new Date(job.deadline).getDate() === tomorrow.getDate();
   const isDeadlinePassed = new Date(job.deadline) < new Date();
-
 
   const handleViewApplicants = () => {
     Cookies.set("jobId", job.id); // Set the job ID to cookies
@@ -111,6 +122,8 @@ tomorrow.setDate(tomorrow.getDate() + 1);
       }
     });
   };
+
+  
 
   return (
     <>
@@ -184,54 +197,57 @@ tomorrow.setDate(tomorrow.getDate() + 1);
                 <h3 className="text-xl">Contact Phone:</h3>
 
                 <p className="my-2 bg-indigo-100 p-2 font-bold">
-                  {job.userPhone}
+                  +251 {job.companyPhone}
                 </p>
               </div>
             </aside>
           </div>
 
           {/* Manage Job Section */}
-         {(role == 'hr' || role == 'admin') && <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-            <Link
-              to={`/edit-job/${job.id}`}
-              className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-            >
-              Edit Job
-            </Link>
-            <Link
-              to={`/applicants/${job.id}`}
-              onClick={handleViewApplicants}
-              className="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-            >
-              View Applicants
-            </Link>
-           
-            <button
-              onClick={() => onDeleteClick(job.id)}
-              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-            >
-              Delete Job
-            </button>
-          </div>}
+          {(role == "hr" || role == "admin") && (
+            <div className="bg-white p-6 rounded-lg shadow-md mt-6">
+              <Link
+                to={`/edit-job/${job.id}`}
+                className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+              >
+                Edit Job
+              </Link>
+              <Link
+                to={`/applicants/${job.id}`}
+                onClick={handleViewApplicants}
+                className="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+              >
+                View Applicants
+              </Link>
 
-          { role == 'user' && <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
-          
-          {!isDeadlinePassed || isDeadlineTomorrow ? (
-                  <button 
+              <button
+                onClick={() => onDeleteClick(job.id)}
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+              >
+                Delete Job
+              </button>
+            </div>
+          )}
+
+          {role == "user" && (
+            <div className="bg-white p-6 rounded-lg shadow-md mt-6">
+              {!isDeadlinePassed || isDeadlineTomorrow ? (
+                <button
                   onClick={submitForm}
-                    className='bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block'
-                  >
-                    Apply Job
-                  </button>
-                ) : (
-                  <button
-                    className='bg-red-500 text-white font-bold py-2 px-4 rounded-full w-full cursor-not-allowed opacity-50 mt-4 block'
-                    disabled
-                  >
-                    Deadline Passed
-                  </button>
-                )}
-          </div>}
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+                >
+                  Apply Job
+                </button>
+              ) : (
+                <button
+                  className="bg-red-500 text-white font-bold py-2 px-4 rounded-full w-full cursor-not-allowed opacity-50 mt-4 block"
+                  disabled
+                >
+                  Deadline Passed
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </section>
     </>
@@ -243,5 +259,5 @@ const jobLoader = async ({ params }) => {
   return res.data;
 };
 
-export { Job , jobLoader };
-export default withAuth (Job)
+export { Job, jobLoader };
+export default withAuth(Job);

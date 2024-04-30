@@ -3,6 +3,7 @@ import axios from "../axiosInterceptor";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import withAuth from "../withAuth";
+import Spinner from "../Components/Spinner";
 
 const ViewStatus = () => {
   const [applications, setApplications] = useState([]);
@@ -19,9 +20,14 @@ const ViewStatus = () => {
         const filteredApplications = response.data.filter(
           (application) => application.userid === cookies.userId
         );
+        
         setApplications(filteredApplications);
+        setLoading(false);
+
       } catch (error) {
         console.error("Error fetching application data:", error);
+        setLoading(false);
+
       } finally {
         setLoading(false);
       }
@@ -31,7 +37,7 @@ const ViewStatus = () => {
   }, [cookies.userId]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
 
   return (
@@ -77,7 +83,7 @@ const ViewStatus = () => {
                       className={`border border-gray-800 px-4 py-2 ${
                         application.status === "Pending"
                           ? "text-yellow-600"
-                          : application.status === "accepted"
+                          : application.status === "Under Consideration"
                           ? "text-green-600"
                           : "text-red-600"
                       }`}

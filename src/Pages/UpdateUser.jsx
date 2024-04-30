@@ -8,14 +8,14 @@ import withAuth from "../withAuth";
 // eslint-disable-next-line react/prop-types, no-unused-vars
 const UpdateUser = ({ updateInformationSubmit }) => {
   const user = useLoaderData();
-  const [fullname, setFullName] = useState(user.fullname);
-  const [age, setAge] = useState(user.age);
-  const [sex, setSex] = useState(user.sex);
-  const [degree, setDegree] = useState(user.degree);
-  const [university, setUniversity] = useState(user.university);
-  const [experience, setExpereince] = useState(user.experience || 'None');
-  const [cv, setCv] = useState(user.cv);
-  const [userPhone, setUserPhone] = useState(user.userPhone);
+  const [fullname, setFullName] = useState(user.fullname || '');
+  const [age, setAge] = useState(user.age || '');
+  const [sex, setSex] = useState(user.sex || '');
+  const [degree, setDegree] = useState(user.degree || '');
+  const [university, setUniversity] = useState(user.university || '');
+  const [experience, setExperience] = useState(user.experience || 'None');
+  const [cv, setCv] = useState(null);
+  const [userPhone, setUserPhone] = useState(user.userPhone || '');
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -34,23 +34,16 @@ const UpdateUser = ({ updateInformationSubmit }) => {
     formData.append("userPhone", userPhone);
 
     try {
-      const response = await axios.patch(`http://localhost:5000/profile/${id}`, {
-        headers: {
-        },
-        body: formData,
-      });
+       await axios.patch(`http://localhost:5000/profile/${id}`, formData);
 
-      if (!response.ok) {
-        throw new Error("Failed to update information");
-      }
+   
       toast.success("Information Updated Successfully");
       navigate(`/account/${id}`);
     } catch (error) {
       toast.error("Failed to update information. Please try again.");
-      console.log(error.message);
+      console.log(error);
     }
   };
-
 
   return (
     <section className="bg-indigo-50">
@@ -167,7 +160,7 @@ const UpdateUser = ({ updateInformationSubmit }) => {
                 className="border rounded w-full py-2 px-3"
                 value={experience}
                 required
-                onChange={(e) => setExpereince(e.target.value)}
+                onChange={(e) => setExperience(e.target.value)}
               >
                 <option value="None">None</option>
                 <option value="Less than 1 Year">Less than 1 Year</option>
@@ -176,7 +169,6 @@ const UpdateUser = ({ updateInformationSubmit }) => {
                 <option value="5+ years">5+ years</option>
               </select>
             </div>
-
 
             <div className="mb-4">
               <label
@@ -229,4 +221,4 @@ const UpdateUser = ({ updateInformationSubmit }) => {
   );
 };
 
-export default withAuth (UpdateUser);
+export default withAuth(UpdateUser);

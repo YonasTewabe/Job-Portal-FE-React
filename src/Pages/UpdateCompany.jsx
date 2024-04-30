@@ -5,11 +5,11 @@ import { toast } from "react-toastify";
 
 // eslint-disable-next-line react/prop-types, no-unused-vars
 const UpdateUser = ({ updateInformationSubmit }) => {
-  const user = useLoaderData() || {}; // Use an empty object if user is undefined
-  const [companyname, setCompanyName] = useState(user.companyname || '');
-  const [companydescription, setCompanyDescription] = useState(user.companydescription || '');
-  const [companyPhone, setCompanyPhone] = useState(user.companyphone || '');
-  const [contactemail, setContactEmail] = useState(user.contactemail || '');
+  const user = useLoaderData() || {};
+  const [companyname, setCompanyName] = useState(user.companyname);
+  const [companydescription, setCompanyDescription] = useState(user.companydescription);
+  const [companyPhone, setCompanyPhone] = useState(user.companyphone);
+  const [contactemail, setContactEmail] = useState(user.contactemail);
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -20,7 +20,7 @@ const UpdateUser = ({ updateInformationSubmit }) => {
     const formData = new FormData();
     formData.append("companyname", companyname);
     formData.append("companydescription", companydescription);
-    formData.append("companyphone", companyPhone);
+    formData.append("companyPhone", companyPhone);
     formData.append("contactemail", contactemail);
 
     try {
@@ -80,7 +80,7 @@ const UpdateUser = ({ updateInformationSubmit }) => {
                 name='companydescription'
                 className='border rounded w-full py-2 px-3'
                 rows='4'
-                placeholder='Add any job duties, expectations, requirements, etc'
+                placeholder='What deos your company do'
                 value={companydescription}
                 onChange={(e) => setCompanyDescription(e.target.value)}
               ></textarea>
