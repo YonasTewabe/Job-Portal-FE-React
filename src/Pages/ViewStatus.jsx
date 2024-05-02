@@ -4,15 +4,19 @@ import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import withAuth from "../withAuth";
 import Spinner from "../Components/Spinner";
-import { FaExclamationTriangle } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import UnauthorizedAccess from "../Components/UnauthorizedAccess";
 
 const ViewStatus = () => {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cookies] = useCookies(["userId"]);
-  const myRole = localStorage.getItem('role');
+  const myRole = localStorage.getItem("role");
 
+  function refreshPage() {
+    setTimeout(() => {
+      window.location.reload(false);
+    }, 500);
+  }
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -22,12 +26,13 @@ const ViewStatus = () => {
         const filteredApplications = response.data.filter(
           (application) => application.userid === cookies.userId
         );
-        
+
         setApplications(filteredApplications);
       } catch (error) {
         console.error("Error fetching application data:", error);
       } finally {
         setLoading(false);
+        refreshPage;
       }
     };
 
@@ -40,8 +45,8 @@ const ViewStatus = () => {
 
   return (
     <>
-            <br />
-      {myRole === 'user' ? (
+      <br />
+      {myRole === "user" ? (
         <div className="bg-indigo-100 py-10">
           <div className="w-full bg-white shadow-md rounded">
             <h1 className="text-indigo-700 text-3xl items-center text-center">
@@ -78,7 +83,7 @@ const ViewStatus = () => {
                       <td className="border border-gray-800 px-4 py-2">
                         {application.applicationdate}
                       </td>
-      
+
                       <td
                         className={`border border-gray-800 px-4 py-2 ${
                           application.status === "Pending"
@@ -89,7 +94,6 @@ const ViewStatus = () => {
                             ? "text-green-600"
                             : "text-red-600"
                         }`}
-                        
                       >
                         {application.status} {application.interviewDate}
                       </td>
@@ -101,20 +105,8 @@ const ViewStatus = () => {
           </div>
         </div>
       ) : (
-        <section className="text-center flex flex-col justify-center items-center h-screen">
-          <FaExclamationTriangle className="text-yellow-400 text-6xl mb-4" />
-          <h1 className="text-5xl font-bold mb-4">Unauthorized Access</h1>
-<p className="text-xl mb-5">Sorry, you do not have the necessary permissions to view this page.</p>
-
-          <Link
-            to="/"
-            className="text-white bg-indigo-700 hover:bg-indigo-900 rounded-md px-3 py-2 mt-4"
-          >
-            Back to Home
-          </Link>
-        </section>
+        <UnauthorizedAccess />
       )}
-
     </>
   );
 };

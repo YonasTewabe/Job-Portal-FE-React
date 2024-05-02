@@ -1,11 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
-import { useParams, useLoaderData, useNavigate, Link } from 'react-router-dom';
+import { useParams, useLoaderData, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from "../axiosInterceptor";
 import withAuth from "../withAuth";
-import { FaExclamationTriangle } from 'react-icons/fa';
+import UnauthorizedAccess from '../Components/UnauthorizedAccess';
 
 
 // eslint-disable-next-line no-unused-vars
@@ -294,17 +294,8 @@ const EditJob = ({ updateJobSubmit }) => {
       </div>
     </section>
       ): (
-        <section className="text-center flex flex-col justify-center items-center h-screen">
-     <FaExclamationTriangle className="text-yellow-400 text-6xl mb-4" />
-     <h1 className="text-5xl font-bold mb-4">Unauthorized Access</h1>
-<p className="text-xl mb-5">Sorry, you do not have the necessary permissions to view this page.</p>
-     <Link
-       to="/"
-       className="text-white bg-indigo-700 hover:bg-indigo-900 rounded-md px-3 py-2 mt-4"
-     >
-       Back to Home
-     </Link>
-   </section>
+        <UnauthorizedAccess />
+
      )}
      </>
   );

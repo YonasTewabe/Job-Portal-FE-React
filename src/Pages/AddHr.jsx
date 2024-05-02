@@ -1,11 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useState } from "react";
 import * as Yup from "yup";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { BiShow, BiHide } from "react-icons/bi";
 import withAuth from "../withAuth";
 import { toast } from "react-toastify";
-import { FaExclamationTriangle } from "react-icons/fa";
+import UnauthorizedAccess from "../Components/UnauthorizedAccess";
 
 const AddHr = () => {
   const [email, setEmail] = useState("");
@@ -184,17 +184,8 @@ const AddHr = () => {
           </div>
         </div>
       ) : (
-        <section className="text-center flex flex-col justify-center items-center h-screen">
-      <FaExclamationTriangle className="text-yellow-400 text-6xl mb-4" />
-      <h1 className="text-5xl font-bold mb-4">Unauthorized Access</h1>
-<p className="text-xl mb-5">Sorry, you do not have the necessary permissions to view this page.</p>
-<Link
-        to="/"
-        className="text-white bg-indigo-700 hover:bg-indigo-900 rounded-md px-3 py-2 mt-4"
-      >
-        Back to Home
-      </Link>
-    </section>
+        <UnauthorizedAccess />
+
       )}
     </>
   );
