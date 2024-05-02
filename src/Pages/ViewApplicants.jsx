@@ -164,7 +164,7 @@ const ViewApplicants = () => {
         sendInterviewEmail(applicant);
       }, 1000);
     } catch (error) {
-      console.error("Error accepting application:", error);
+      console.error("Error scheduling interview:", error);
     }
   };
 
@@ -246,7 +246,7 @@ const ViewApplicants = () => {
 
   return (
     <>
-    {(myRole === 'Admin' || myRole === "hr") ? (
+    {(myRole === 'admin' || myRole === "hr") ? (
     <div className="container mx-auto bg-indigo-100 py-10 px-6">
       <br />
       <h1 className="text-3xl mb-6 text-indigo-700">Applicants </h1>

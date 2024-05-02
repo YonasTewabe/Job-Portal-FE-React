@@ -16,7 +16,6 @@ const HomePage = () => {
         navigate("/login");
       }, 100);
 
-      // Clear the timeout if the component unmounts
       return () => clearTimeout(timeoutId);
     }
   }, [navigate]);
