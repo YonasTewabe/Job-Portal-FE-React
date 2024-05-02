@@ -1,10 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useState } from "react";
-import { useParams, useNavigate, useLoaderData } from "react-router-dom";
+import { useParams, useNavigate, useLoaderData, Link } from "react-router-dom";
 import axios from "../axiosInterceptor";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 import withAuth from "../withAuth";
+import { FaExclamationTriangle } from "react-icons/fa";
 
 const UpdateUser = () => {
   const user = useLoaderData();
@@ -16,7 +17,7 @@ const UpdateUser = () => {
   const [experience, setExperience] = useState(user.experience || "None");
   const [cv, setCv] = useState(user.cv);
   const [userPhone, setUserPhone] = useState(user.userPhone || "");
-
+  const myRole= localStorage.getItem('role')
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -81,6 +82,8 @@ const UpdateUser = () => {
   };
 
   return (
+    <>
+    {myRole === 'user' ? (
     <section className="bg-indigo-50">
       <div className="container m-auto max-w-2xl py-24">
         <div className="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0">
@@ -274,6 +277,20 @@ const UpdateUser = () => {
         </div>
       </div>
     </section>
+      ): (
+        <section className="text-center flex flex-col justify-center items-center h-screen">
+     <FaExclamationTriangle className="text-yellow-400 text-6xl mb-4" />
+     <h1 className="text-5xl font-bold mb-4">Unauthorized Access</h1>
+<p className="text-xl mb-5">Sorry, you do not have the necessary permissions to view this page.</p>
+     <Link
+       to="/"
+       className="text-white bg-indigo-700 hover:bg-indigo-900 rounded-md px-3 py-2 mt-4"
+     >
+       Back to Home
+     </Link>
+   </section>
+     )}
+     </>
   );
 };
 
