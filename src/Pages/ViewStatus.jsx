@@ -79,17 +79,20 @@ const ViewStatus = () => {
                     <td className="border border-gray-800 px-4 py-2">
                       {application.applicationdate}
                     </td>
+
                     <td
                       className={`border border-gray-800 px-4 py-2 ${
                         application.status === "Pending"
                           ? "text-yellow-600"
-                          : application.status === "Under Consideration"
+                          : application.status === "Under Review"
+                          ? "text-blue-600"
+                          : application.status === "Interview Scheduled"
                           ? "text-green-600"
                           : "text-red-600"
                       }`}
                       
                     >
-                      {application.status}
+                      {application.status} {application.interviewDate}
                     </td>
                   </tr>
                 ))}
@@ -102,4 +105,4 @@ const ViewStatus = () => {
   );
 };
 
-export default withAuth (ViewStatus);
+export default withAuth(ViewStatus);

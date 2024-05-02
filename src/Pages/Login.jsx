@@ -76,7 +76,7 @@ const ValidatedLoginForm = () => {
     } else if (role === 'user' && usercompleted !== "true") {
       navigate(`/UpdateUser/${Cookies.get("userId")}`);
     } else if (role === 'hr' && hrcompleted !== "true") {
-      navigate(`/register/${Cookies.get("userId")}`);
+      navigate(`/CompanyInfo/${Cookies.get("userId")}`);
     }
   };
 
@@ -150,7 +150,7 @@ const ValidatedLoginForm = () => {
           </div>
         </form>
         <div className="text-center mt-4 flex justify-between">
-          <Link to="/forgot-password" className="text-sm text-blue-500">
+          <Link to="/forgotpassword" className="text-sm text-blue-500">
             Forgot Password?
           </Link>
           <span className="text-sm">

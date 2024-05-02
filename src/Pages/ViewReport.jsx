@@ -9,11 +9,13 @@ import Cookies from "js-cookie";
 const Donut = () => {
   const [underConsideration, setConsideration] = useState(null);
   const [rejected, setRejected] = useState(null);
+  const [pending, setPending] = useState(null);
+  const [interviewScheduled, setInterview] = useState(null);
   const jobId = Cookies.get("jobId");
 
 
   const [options] = useState({
-    labels: ["Under Consideration", "Rejected"],
+    labels: ["Under Review", "Interview Scheduled","Pending", "Rejected"],
   });
 useEffect(() => {
   const fetchData = async () => {
@@ -25,14 +27,22 @@ useEffect(() => {
         (application) => application.jobid === jobId
       );
       const considerationCount = filteredApplications.filter(
-        (application) => application.status === "Under Consideration"
+        (application) => application.status === "Under Review"
       ).length;
       const rejectedCount = filteredApplications.filter(
         (application) => application.status === "Rejected"
+      ).length;      
+      const pendingCount = filteredApplications.filter(
+        (application) => application.status === "Pending"
+      ).length;      
+      const interviewCount = filteredApplications.filter(
+        (application) => application.status === "Interview Scheduled"
       ).length;
 
       setConsideration(considerationCount);
       setRejected(rejectedCount);
+      setPending(pendingCount);
+      setInterview(interviewCount);
     } catch (error) {
       console.error("Error fetching application data:", error);
     }
@@ -47,7 +57,7 @@ useEffect(() => {
       <br />
         <Chart
           options={options}
-          series={[underConsideration, rejected]}
+          series={[underConsideration, interviewScheduled, pending, rejected]}
           type="pie"
           width="380"
         />

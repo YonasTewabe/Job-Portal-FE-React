@@ -4,25 +4,23 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
+import { BiShow, BiHide } from "react-icons/bi";
 import Cookies from "js-cookie";
 import withAuth from "../withAuth";
 import axios from "../axiosInterceptor";
-
 
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [Password, setPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const passwordRegex =
     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/;
 
-  const id = Cookies.get("userId"); // Fetch userId from cookie
-
-  const formData = new FormData();
-  formData.append("password", Password);
+  const id = Cookies.get("userId");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,16 +31,15 @@ const ChangePassword = () => {
 
     try {
       const response = await axios.patch(`http://localhost:5000/profile/${id}`, {
-        headers: {},
-        body: formData,
+        password: Password,
       });
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error("Failed to update information");
       }
 
       toast.success("Password changed Successfully");
-      navigate(`/account/${id}`); // Update the navigation path
+      navigate(`/account/${id}`);
     } catch (error) {
       toast.error("Failed to update information. Please try again.");
       console.log(error.message);
@@ -97,17 +94,26 @@ const ChangePassword = () => {
             >
               Current Password
             </label>
-            <input
-              id="currentPassword"
-              name="currentPassword"
-              type="password"
-              placeholder="Enter your current password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              className={`border rounded py-2 px-3 w-full ${
-                errors.currentPassword ? "border-red-500" : ""
-              }`}
-            />
+            <div className="relative">
+              <input
+                id="currentPassword"
+                name="currentPassword"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your current password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                className={`border rounded py-2 px-3 w-full ${
+                  errors.currentPassword ? "border-red-500" : ""
+                }`}
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <BiHide /> : <BiShow />}
+              </button>
+            </div>
             {errors.currentPassword && (
               <div className="text-red-500 text-sm">
                 {errors.currentPassword}
@@ -120,17 +126,26 @@ const ChangePassword = () => {
             >
               New Password
             </label>
-            <input
-              id="newPassword"
-              name="newPassword"
-              type="password"
-              placeholder="Enter your new password"
-              value={Password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={`border rounded py-2 px-3 w-full ${
-                errors.newPassword ? "border-red-500" : ""
-              }`}
-            />
+            <div className="relative">
+              <input
+                id="newPassword"
+                name="newPassword"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your new password"
+                value={Password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={`border rounded py-2 px-3 w-full ${
+                  errors.newPassword ? "border-red-500" : ""
+                }`}
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <BiHide /> : <BiShow />}
+              </button>
+            </div>
             {errors.newPassword && (
               <div className="text-red-500 text-sm">{errors.newPassword}</div>
             )}
@@ -141,17 +156,26 @@ const ChangePassword = () => {
             >
               Confirm New Password
             </label>
-            <input
-              id="confirmNewPassword"
-              name="confirmNewPassword"
-              type="password"
-              placeholder="Confirm your new password"
-              value={confirmNewPassword}
-              onChange={(e) => setConfirmNewPassword(e.target.value)}
-              className={`border rounded py-2 px-3 w-full ${
-                errors.confirmNewPassword ? "border-red-500" : ""
-              }`}
-            />
+            <div className="relative">
+              <input
+                id="confirmNewPassword"
+                name="confirmNewPassword"
+                type={showPassword ? "text" : "password"}
+                placeholder="Confirm your new password"
+                value={confirmNewPassword}
+                onChange={(e) => setConfirmNewPassword(e.target.value)}
+                className={`border rounded py-2 px-3 w-full ${
+                  errors.confirmNewPassword ? "border-red-500" : ""
+                }`}
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <BiHide /> : <BiShow />}
+              </button>
+            </div>
             {errors.confirmNewPassword && (
               <div className="text-red-500 text-sm">
                 {errors.confirmNewPassword}
@@ -173,4 +197,4 @@ const ChangePassword = () => {
   );
 };
 
-export default withAuth (ChangePassword);
+export default withAuth(ChangePassword);

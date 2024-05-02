@@ -50,7 +50,6 @@ const Job = ({ deleteJob }) => {
   const contactemail = user ? user.email : "";
   const userphone = user ? user.userPhone : "";
   const university = user ? user.university : "";
-  ``;
   const degree = user ? user.degree : "";
   const experience = user ? user.experience : "";
   const jobid = job.id;
@@ -61,7 +60,6 @@ const Job = ({ deleteJob }) => {
     e.preventDefault();
 
     try {
-      // Check if the user has already applied to this job
       const existingApplication = await axios.get(
         `http://localhost:5000/application/check/${jobid}/${userid}`
       );
@@ -69,7 +67,6 @@ const Job = ({ deleteJob }) => {
         throw new Error("You have already applied to this job");
       }
 
-      // Submit the new application
       await axios.post("http://localhost:5000/application/apply", {
         jobtitle,
         companyname,
@@ -94,11 +91,7 @@ const Job = ({ deleteJob }) => {
     }
   };
 
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
 
-  const isDeadlineTomorrow =
-    new Date(job.deadline).getDate() === tomorrow.getDate();
   const isDeadlinePassed = new Date(job.deadline) < new Date();
 
   const handleViewApplicants = () => {
@@ -231,7 +224,7 @@ const Job = ({ deleteJob }) => {
 
           {role == "user" && (
             <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-              {!isDeadlinePassed || isDeadlineTomorrow ? (
+              {!isDeadlinePassed ? (
                 <button
                   onClick={submitForm}
                   className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"

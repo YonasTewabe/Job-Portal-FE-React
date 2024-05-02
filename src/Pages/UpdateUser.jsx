@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import withAuth from "../withAuth";
 
 // eslint-disable-next-line react/prop-types, no-unused-vars
-const UpdateUser = ({ updateInformationSubmit }) => {
+const UpdateUser = () => {
   const user = useLoaderData();
   const [fullname, setFullName] = useState(user.fullname || '');
   const [age, setAge] = useState(user.age || '');
@@ -14,7 +14,7 @@ const UpdateUser = ({ updateInformationSubmit }) => {
   const [degree, setDegree] = useState(user.degree || '');
   const [university, setUniversity] = useState(user.university || '');
   const [experience, setExperience] = useState(user.experience || 'None');
-  const [cv, setCv] = useState(null);
+  const [cv, setCv] = useState(user.cv);
   const [userPhone, setUserPhone] = useState(user.userPhone || '');
 
   const navigate = useNavigate();
@@ -34,9 +34,14 @@ const UpdateUser = ({ updateInformationSubmit }) => {
     formData.append("userPhone", userPhone);
 
     try {
-       await axios.patch(`http://localhost:5000/profile/${id}`, formData);
-
-   
+      const response =   await axios.patch(`http://localhost:5000/profile/${id}`, formData,  {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+        if  (response.status !== 200) {
+        throw new Error("Failed to update information");
+      }
       toast.success("Information Updated Successfully");
       navigate(`/account/${id}`);
     } catch (error) {
