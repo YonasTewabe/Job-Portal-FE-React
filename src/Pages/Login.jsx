@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BiShow, BiHide } from "react-icons/bi";
-
+import { toast } from "react-toastify";
 import * as Yup from "yup";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -16,29 +16,29 @@ const ValidatedLoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!validateForm()) {
       return;
     }
-
+  
     try {
       const response = await axios.post("http://localhost:5000/profile/login", {
         email,
         password,
       });
-
+  
       Cookies.set("jwt", response.data.jwt, { expires: 1 });
       Cookies.set("userId", response.data.profileId, { expires: 1 });
       localStorage.setItem("usercompleted", response.data.usercompleted);
       localStorage.setItem("hrcompleted", response.data.hrcompleted);
       localStorage.setItem("role", response.data.role);
-      
+  
       setEmail("");
       setPassword("");
       navigateAfterLogin();
     } catch (error) {
       console.error("Login error:", error);
-      setErrors({ login: "Invalid email or password" });
+      toast.error("Invalid email or password");
     }
   };
 

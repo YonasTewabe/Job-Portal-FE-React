@@ -16,7 +16,6 @@ const ViewStatus = () => {
         const response = await axios.get(
           `http://localhost:5000/application/all`
         );
-        console.log("Response data:", response.data);
         const filteredApplications = response.data.filter(
           (application) => application.userid === cookies.userId
         );
