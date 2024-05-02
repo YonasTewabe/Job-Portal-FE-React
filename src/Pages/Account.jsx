@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 import { useLoaderData, Link, useNavigate, useParams } from "react-router-dom";
 import axios from "../axiosInterceptor";
 import withAuth from "../withAuth";
+import Cookies from "js-cookie";
+
 
 // eslint-disable-next-line react-refresh/only-export-components, react/prop-types
 const Account = ({ deleteUser }) => {
@@ -26,7 +28,12 @@ const Account = ({ deleteUser }) => {
       if (result.isConfirmed) {
         await deleteUser(userId);
         toast.success("Account Deleted Successfully");
-
+        Cookies.remove("userId");
+        Cookies.remove("jwt");
+        Cookies.remove("jobId")
+        localStorage.removeItem("role");
+        localStorage.removeItem("usercompleted");
+        localStorage.removeItem("hrcompleted");
         navigate("/signup");
       }
     });
@@ -154,7 +161,7 @@ const Account = ({ deleteUser }) => {
                 )}
                 {role == "hr" && (
                   <Link
-                    to={`/register/${user.id}`}
+                    to={`/CompanyInfo/${user.id}`}
                     className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
                   >
                     Update Information

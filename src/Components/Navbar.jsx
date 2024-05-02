@@ -101,12 +101,13 @@ const Navbar = () => {
       });
       Cookies.remove("userId");
       Cookies.remove("jwt");
+      Cookies.remove("jobId")
       localStorage.removeItem("role");
-      localStorage.removeItem("completed");
-      navigate("/login", { replace: true }); // Redirect to login and replace current entry in history
+      localStorage.removeItem("usercompleted");
+      localStorage.removeItem("hrcompleted");
+      navigate("/login", { replace: true }); 
     } catch (error) {
       console.error("Logout error:", error);
-      // Handle error, e.g., show a message to the user
     }
   };
   
@@ -122,10 +123,9 @@ const Navbar = () => {
   const storedId = Cookies.get("userId");
   const value = storedId ? `/account/${storedId}` : "/";
 
-  // Check if role is set to "User", "Admin", or "HR"
  
   if (role !== "user" && role !== "admin" && role !== "hr") {
-    return null; // If role is not one of these, do not render the navbar
+    return null; 
   }
 
   return (

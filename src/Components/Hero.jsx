@@ -22,14 +22,6 @@ const Hero = () => {
           Look for the employee that fits your needs and requirements
           </p>
         </div>} 
-        {/* { role == 'admin'  &&  <div className="text-center">
-          <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl">
-          Find Your Next Employee
-          </h1>
-          <p className="my-4 text-xl text-white">
-          Look for the employee that fits your needs and requirements
-          </p>
-        </div>} */}
       </div>
     </section>
   );
