@@ -19,7 +19,6 @@ import ViewStatus from "./Pages/ViewStatus";
 import AddHr from "./Pages/AddHr";
 import ChangePassword from "./Pages/ChangePassword";
 import ForgotPassword from "./Pages/ForgotPassword";
-import UnauthorizedAccess from "./Pages/UnautorizedAccess";
 import CompanyInfo from "./Pages/CompanyInfo";
 
 const App = () => {
@@ -64,7 +63,6 @@ const App = () => {
         <Route path='/status' element={<ViewStatus />} />
         <Route path='/add-hr' element={<AddHr />} />
         <Route path='/changepassword/:id' element={<ChangePassword />} />
-        <Route path='/unauthorized' element={<UnauthorizedAccess />} />
         <Route path='/forgotpassword' element={<ForgotPassword />} />
         
 
