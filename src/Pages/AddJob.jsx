@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import withAuth from "../withAuth";
 import Cookies from "js-cookie";
 import axios from "../axiosInterceptor";
+import UnauthorizedAccess from '../Components/UnauthorizedAccess';
 
 // eslint-disable-next-line react/prop-types
 const AddJob = ({ addJobSubmit }) => {
@@ -25,7 +26,6 @@ const AddJob = ({ addJobSubmit }) => {
   };
 
   if (userId && !user) {
-    console.log("Fetching user data...");
     fetchUser();
   }
   const companyName = user?.companyname || '';
@@ -34,6 +34,7 @@ const AddJob = ({ addJobSubmit }) => {
   const companyPhone = user?.companyPhone || '';
 
   const navigate = useNavigate();
+  const myRole= localStorage.getItem('role')
 
   const submitForm = async (e) => {
     e.preventDefault();
@@ -73,6 +74,9 @@ const AddJob = ({ addJobSubmit }) => {
   const [deadline, setDeadline] = useState('');
 
   return user ? (
+    <>
+     {(myRole === 'admin' || myRole === 'hr') ? (
+
     <section className='bg-indigo-50'>
       <div className='container m-auto max-w-2xl py-24'>
         <div className='bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0'>
@@ -201,6 +205,10 @@ const AddJob = ({ addJobSubmit }) => {
         </div>
       </div>
     </section>
+    ) : (
+<UnauthorizedAccess />
+    )}
+    </>
   ) : null;
 };
 

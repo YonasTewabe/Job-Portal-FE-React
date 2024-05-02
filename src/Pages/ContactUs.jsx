@@ -3,7 +3,6 @@ import { FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
 import emailjs from "@emailjs/browser";
 import { toast } from "react-toastify";
 
-
 const ContactUs = () => {
   const form = useRef();
 
@@ -11,14 +10,20 @@ const ContactUs = () => {
     e.preventDefault();
 
     try {
-      await emailjs.sendForm("service_s02dvbp", "template_41ybe0n", form.current, {
-        publicKey: "CxqrPI5OiPSTIGXkB",
-      });
-      toast.success("Thank you for your feedback. Your Email has been received!");
+      await emailjs.sendForm(
+        "service_s02dvbp",
+        "template_41ybe0n",
+        form.current,
+        {
+          publicKey: "CxqrPI5OiPSTIGXkB",
+        }
+      );
+      toast.success(
+        "Thank you for your feedback. Your Email has been received!"
+      );
     } catch (error) {
       toast.error("Unable to send mail. Please try again later");
     }
-    
 
     e.target.reset();
   };
@@ -29,29 +34,39 @@ const ContactUs = () => {
         <div className="w-full pr-4">
           <h2 className="text-3xl font-bold mb-4 text-indigo-700">Contact</h2>
           <p className="mb-4">
-            If you have any questions or are facing any issues, feel free to reach
-            out to us using the contact information below:
+            If you have any questions or encounter any issues, please don&apos;t
+            hesitate to reach out using the contact information below or send us
+            an email using the form:
           </p>
           <ul className="list-none ml-8 mb-4">
             <li>
-              <FaEnvelope className="inline-block mr-2" /> Email: info@example.com
+              <FaEnvelope className="inline-block mr-2" /> Email:
+              yonastewabe21@gmail.com
             </li>
             <li>
-              <FaPhone className="inline-block mr-2" /> Phone: +251-900-000-000
+              <FaPhone className="inline-block mr-2" /> Phone: +251 919 37 05 44
             </li>
             <li>
               <FaMapMarkerAlt className="inline-block mr-2" /> Address: 123 Main
               Street, Addis Ababa, Ethiopia
             </li>
           </ul>
-          <p>We will be more than excited to talk to you. All your suggestions, reviews, feedback and queries will be appreciated. Do get in touch with us and we will love to hear from you!</p>
+          <p>
+            We are eager to hear from you! Your suggestions, reviews, feedback,
+            and queries are highly appreciated. Get in touch with us, and we
+            will be delighted to assist you!
+          </p>
         </div>
         <div className="w-full pl-4">
-          <h2 className="text-3xl font-bold mb-4 text-indigo-700">Contact Form</h2>
+          <h2 className="text-3xl font-bold mb-4 text-indigo-700">
+            Contact Form
+          </h2>
           <form ref={form} onSubmit={sendMail} className="flex flex-col">
             <div className="flex mb-4">
               <div className="w-1/2 pr-2">
-                <label htmlFor="fullName" className="block mb-1">Full Name</label>
+                <label htmlFor="fullName" className="block mb-1">
+                  Full Name
+                </label>
                 <input
                   id="fullName"
                   name="Your_name"
@@ -61,7 +76,9 @@ const ContactUs = () => {
                 />
               </div>
               <div className="w-1/2 pl-2">
-                <label htmlFor="email" className="block mb-1">Email</label>
+                <label htmlFor="email" className="block mb-1">
+                  Email
+                </label>
                 <input
                   id="email"
                   name="email"
@@ -71,7 +88,9 @@ const ContactUs = () => {
                 />
               </div>
             </div>
-            <label htmlFor="subject" className="block mb-1 mt-4">Subject</label>
+            <label htmlFor="subject" className="block mb-1 mt-4">
+              Subject
+            </label>
             <input
               id="subject"
               name="subject"
@@ -79,7 +98,9 @@ const ContactUs = () => {
               required
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
-            <label htmlFor="message" className="block mb-1 mt-4">Message</label>
+            <label htmlFor="message" className="block mb-1 mt-4">
+              Message
+            </label>
             <textarea
               id="message"
               name="message"
