@@ -30,7 +30,6 @@ const Job = ({ deleteJob }) => {
         console.error("Fetch user data error:", error);
       }
     };
-    console.log("Fetching user data...");
     fetchUser();
   }
 
