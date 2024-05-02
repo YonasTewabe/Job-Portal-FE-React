@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import axios from "../axiosInterceptor";
 import JobListing from "./JobListing";
@@ -36,6 +37,7 @@ const JobListings = ({ isHome = false }) => {
       job.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  //Sorting Jobs
   const customSort = (a, b) => {
     switch (sortCriteria) {
       case "deadline":
@@ -69,7 +71,6 @@ const JobListings = ({ isHome = false }) => {
 
   const displayJobs = isHome ? hrJobs.slice(0, 3) : hrJobs;
 
-  console.log("Display Jobs:", displayJobs);
 
   return (
     <section className="bg-blue-50 px-4 py-10">
@@ -94,7 +95,6 @@ const JobListings = ({ isHome = false }) => {
               onChange={(e) => setSortCriteria(e.target.value)}
             >
               <option value="" disabled>
-                {" "}
                 Sort Jobs
               </option>
               <option value="title">Sort by Job Title</option>

@@ -15,6 +15,7 @@ const Account = ({ deleteUser }) => {
   const param = useParams();
   const role = localStorage.getItem("role");
 
+  //Delete Account
   const onDelete = (userId) => {
     Swal.fire({
       title: "Are you sure?",
@@ -39,6 +40,7 @@ const Account = ({ deleteUser }) => {
     });
   };
 
+  //Show user cv
   const renderCV = (cv) => {
     if (cv) {
       return (
@@ -101,8 +103,8 @@ const Account = ({ deleteUser }) => {
                   <p className="my-2 bg-indigo-100 p-2 font-bold">
                     {user.experience}
                   </p>
-                  <h3 className="text-xl font-bold">CV:</h3>
-
+                  <h3 className="text-xl font-bold flex">CV:</h3>
+                  {user.cv}
                   {renderCV(user.cv)}
                 </div>
                 <div className="bg-white p-6 rounded-lg shadow-md">
@@ -129,7 +131,7 @@ const Account = ({ deleteUser }) => {
                 <div className="grid grid-cols-1  w-full gap-6">
                   <div className="bg-white p-6 rounded-lg shadow-md md:text-left">
                     <h3 className="text-indigo-800 text-lg font-bold mb-6">
-                      Ccompany Information
+                      Company Information
                     </h3>
                     <h3 className="text-xl font-bold">Company Name:</h3>
                     <p className="my-2 bg-indigo-100 p-2 font-bold">
