@@ -13,7 +13,6 @@ const CompanyInfo = () => {
   const [companyPhone, setCompanyPhone] = useState(user.companyPhone || '');
   const [contactemail, setContactEmail] = useState(user.contactemail || '');
 
-console.log(companyPhone)
   const navigate = useNavigate();
   const { id } = useParams();
 

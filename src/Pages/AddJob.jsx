@@ -168,11 +168,11 @@ const AddJob = ({ addJobSubmit }) => {
                 onChange={(e) => setSalary(e.target.value)}
               >
                 <option value='Negotiable'>Negotiable</option> 
-                <option value='Under 10K'>Under 10,000</option>
-                <option value='$10K - 15K'>10,000 - 15,000</option>
-                <option value='$15K - 20K'>15,000 - 20,000</option>
-                <option value='$20K - 25K'>20,000 - 25,000</option>
-                <option value='$Over 25K'>Over 25,000</option>
+                <option value='Under 10,000'>Under 10,000</option>
+                <option value='10,000 - 15,000'>10,000 - 15,000</option>
+                <option value='15,000 - 20,000'>15,000 - 20,000</option>
+                <option value='20,000 - 25,000'>20,000 - 25,000</option>
+                <option value='Over 25,000'>Over 25,000</option>
               </select>
             </div>
             <div className='mb-4'>

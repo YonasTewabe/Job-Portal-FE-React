@@ -6,6 +6,7 @@ import { Cookies } from "react-cookie";
 const withAuth = (WrappedComponent) => {
     const HocComponent = (props) => {
       const navigate = useNavigate();
+      // eslint-disable-next-line no-unused-vars
       const [user, setUser] = useState(null);
       const [loading, setLoading] = useState(true);
       const [redirecting, setRedirecting] = useState(false);
@@ -14,12 +15,9 @@ const withAuth = (WrappedComponent) => {
 
       useEffect(() => {
         const checkAuth = async () => {
-            console.log('Cookies:', cookies);
             const jwtToken = cookies.get('jwt'); // Use cookies.get('jwt') to get the JWT token
-            console.log('JWT Token:', jwtToken);
             if (!jwtToken) {
                 setRedirecting(true);
-                console.log('Redirecting to login');
                 navigate('/login');
             } else {
                 setLoading(false);
@@ -30,7 +28,6 @@ const withAuth = (WrappedComponent) => {
         checkAuth();
       }, [navigate, cookies]);
 
-      console.log('user:', user);
 
       if (loading || redirecting) {
         return <div><Spinner /></div>;
