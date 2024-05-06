@@ -29,12 +29,6 @@ const UpdateUser = () => {
     university: Yup.string().required("University is required"),
     experience: Yup.string().required("Experience is required"),
     userPhone: Yup.string().matches(/^[0-9]{9}$/, "Phone number must be 9 digits").required("Phone number is required"),
-    cv: Yup.mixed().test("fileType", "CV must be a PDF file", (value) => {
-      if (value) {
-        return value.type === "application/pdf";
-      }
-      return true;
-    }).required("CV is required")
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -55,7 +49,7 @@ const UpdateUser = () => {
       formData.append("experience", experience);
       formData.append("userPhone", userPhone);
 
-      const response = await axios.patch(`http://localhost:5000/profile/${id}`, formData, {
+      const response = await axios.patch(`/api/profile/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

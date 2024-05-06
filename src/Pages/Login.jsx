@@ -71,7 +71,7 @@ const ValidatedLoginForm = () => {
     const usercompleted = localStorage.getItem("usercompleted");
     const hrcompleted = localStorage.getItem("hrcompleted");
 
-    if (usercompleted === "true" || hrcompleted === "true") {
+    if (usercompleted === "true" || hrcompleted === "true" || role ==='admin') {
       navigate("/");
     } else if (role === 'user' && usercompleted !== "true") {
       navigate(`/UpdateUser/${Cookies.get("userId")}`);
