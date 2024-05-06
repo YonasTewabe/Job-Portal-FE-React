@@ -21,7 +21,7 @@ const ViewStatus = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/application/all`
+          `/api/application/all`
         );
         const filteredApplications = response.data.filter(
           (application) => application.userid === cookies.userId
@@ -88,7 +88,7 @@ const ViewStatus = () => {
                         className={`border border-gray-800 px-4 py-2 ${
                           application.status === "Pending"
                             ? "text-yellow-600"
-                            : application.status === "Under Review"
+                            : application.status === "Under Consideration"
                             ? "text-blue-600"
                             : application.status === "Interview Scheduled"
                             ? "text-green-600"

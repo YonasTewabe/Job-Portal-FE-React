@@ -6,7 +6,6 @@ import axios from "../axiosInterceptor";
 import withAuth from "../withAuth";
 import Cookies from "js-cookie";
 
-
 // eslint-disable-next-line react-refresh/only-export-components, react/prop-types
 const Account = ({ deleteUser }) => {
   const user = useLoaderData();
@@ -31,7 +30,7 @@ const Account = ({ deleteUser }) => {
         toast.success("Account Deleted Successfully");
         Cookies.remove("userId");
         Cookies.remove("jwt");
-        Cookies.remove("jobId")
+        Cookies.remove("jobId");
         localStorage.removeItem("role");
         localStorage.removeItem("usercompleted");
         localStorage.removeItem("hrcompleted");
@@ -46,9 +45,7 @@ const Account = ({ deleteUser }) => {
       return (
         <div>
           <button
-            onClick={() =>
-              window.open(`http://localhost:5000/uploads/${cv}`, "_blank")
-            }
+            onClick={() => window.open(`/api/uploads/${cv}`, "_blank")}
             className="ml-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-1 px-2 rounded-full focus:outline-none focus:shadow-outline"
           >
             Download CV
@@ -154,33 +151,57 @@ const Account = ({ deleteUser }) => {
               )}
               <div className="bg-white p-6 rounded-lg shadow-md mt-6">
                 {role == "user" && (
-                  <Link
-                    to={`/UpdateUser/${user.id}`}
-                    className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-                  >
-                    Update Information
-                  </Link>
+                  <>
+                    <Link
+                      to={`/UpdateUser/${user.id}`}
+                      className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+                    >
+                      Update Information
+                    </Link>
+                    <Link
+                      to={`/changepassword/${user.id}`}
+                      className="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+                    >
+                      Change Password
+                    </Link>
+                    <button
+                      onClick={() => onDelete(user.id)}
+                      className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+                    >
+                      Delete Account
+                    </button>
+                  </>
                 )}
                 {role == "hr" && (
+                  <>
+                    <Link
+                      to={`/CompanyInfo/${user.id}`}
+                      className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+                    >
+                      Update Information
+                    </Link>
+                    <Link
+                      to={`/changepassword/${user.id}`}
+                      className="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+                    >
+                      Change Password
+                    </Link>
+                    <button
+                      onClick={() => onDelete(user.id)}
+                      className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+                    >
+                      Delete Account
+                    </button>
+                  </>
+                )}
+                {role == "admin" && (
                   <Link
-                    to={`/CompanyInfo/${user.id}`}
-                    className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+                    to={`/changepassword/${user.id}`}
+                    className="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
                   >
-                    Update Information
+                    Change Password
                   </Link>
                 )}
-                <Link
-                  to={`/changepassword/${user.id}`}
-                  className="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-                >
-                  Change Password
-                </Link>
-                <button
-                  onClick={() => onDelete(user.id)}
-                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-                >
-                  Delete Account
-                </button>
               </div>
             </div>
           </div>
