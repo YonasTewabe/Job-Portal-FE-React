@@ -50,7 +50,7 @@ const ForgotPassword = () => {
     const generatedPassword = generatePassword(9); // Generate a 10-character password
 
     try {
-      await axios.patch(`http://localhost:5000/profile/email/${Email}`, {
+      await axios.patch(`/api/profile/email/${Email}`, {
         password: generatedPassword,
       });
 
@@ -121,7 +121,7 @@ const ForgotPassword = () => {
                   type="submit"
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 >
-                  Send Mail
+                 Reset Password
                 </button>
               </div>
             </div>

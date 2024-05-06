@@ -20,7 +20,7 @@ const Job = ({ deleteJob }) => {
   if (userId && !user) {
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/profile/${userId}`);
+        const res = await axios.get(`/api/profile/${userId}`);
         if (res.status === 200) {
           setUser(res.data);
         } else {
@@ -60,13 +60,13 @@ const Job = ({ deleteJob }) => {
 
     try {
       const existingApplication = await axios.get(
-        `http://localhost:5000/application/check/${jobid}/${userid}`
+        `/api/application/check/${jobid}/${userid}`
       );
       if (existingApplication.data) {
         throw new Error("You have already applied to this job");
       }
 
-      await axios.post("http://localhost:5000/application/apply", {
+      await axios.post("/api/application/apply", {
         jobtitle,
         companyname,
         fullname,
@@ -196,50 +196,61 @@ const Job = ({ deleteJob }) => {
           </div>
 
           {/* Manage Job Section */}
-          {(role == "hr" || role == "admin") && (
-            <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-              <Link
-                to={`/edit-job/${job.id}`}
-                className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-              >
-                Edit Job
-              </Link>
-              <Link
-                to={`/applicants/${job.id}`}
-                onClick={handleViewApplicants}
-                className="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-              >
-                View Applicants
-              </Link>
+          {role == "hr" && (
+  <div className="bg-white p-6 rounded-lg shadow-md mt-6">
+    <Link
+      to={`/edit-job/${job.id}`}
+      className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+    >
+      Edit Job
+    </Link>
+    <Link
+      to={`/applicants/${job.id}`}
+      onClick={handleViewApplicants}
+      className="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+    >
+      View Applicants
+    </Link>
 
-              <button
-                onClick={() => onDeleteClick(job.id)}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-              >
-                Delete Job
-              </button>
-            </div>
-          )}
 
-          {role == "user" && (
-            <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-              {!isDeadlinePassed ? (
-                <button
-                  onClick={submitForm}
-                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-                >
-                  Apply Job
-                </button>
-              ) : (
-                <button
-                  className="bg-red-500 text-white font-bold py-2 px-4 rounded-full w-full cursor-not-allowed opacity-50 mt-4 block"
-                  disabled
-                >
-                  Deadline Passed
-                </button>
-              )}
-            </div>
-          )}
+<button
+onClick={() => onDeleteClick(job.id)}
+className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+>
+Delete Job
+</button>
+</div>
+)}
+
+{role == "admin" && (
+  <button
+    onClick={() => onDeleteClick(job.id)}
+    className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+  >
+    Delete Job
+  </button>
+)}
+
+{role == "user" && (
+  <div className="bg-white p-6 rounded-lg shadow-md mt-6">
+    {!isDeadlinePassed ? (
+      <button
+        onClick={submitForm}
+        className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+      >
+        Apply Job
+      </button>
+    ) : (
+      <button
+        className="bg-red-500 text-white font-bold py-2 px-4 rounded-full w-full cursor-not-allowed opacity-50 mt-4 block"
+        disabled
+      >
+        Deadline Passed
+      </button>
+    )}
+  </div>
+)}
+
         </div>
       </section>
     </>
@@ -247,7 +258,7 @@ const Job = ({ deleteJob }) => {
 };
 
 const jobLoader = async ({ params }) => {
-  const res = await axios.get(`http://localhost:5000/jobs/${params.id}`);
+  const res = await axios.get(`/api/jobs/${params.id}`);
   return res.data;
 };
 
