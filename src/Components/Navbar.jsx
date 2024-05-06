@@ -44,13 +44,7 @@ const Navbar = () => {
       link: "/",
       className: { linkClass },
     },
-    {
-      icon: <GoPlusCircle size={25} className="mr-4" />,
-      text: "Add Job",
-      link: "/add-job",
-      className: { linkClass },
-    },   
-     {
+   {
       icon: <IoMdPersonAdd size={25} className="mr-4" />,
       text: "Add Hr",
       link: "/add-hr",
@@ -58,7 +52,7 @@ const Navbar = () => {
     },
     {
       icon: <MdSummarize size={25} className="mr-4" />,
-      text: "Your Jobs",
+      text: "All Jobs",
       link: "/jobs",
       className: { linkClass },
     }
@@ -95,7 +89,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:5000/profile/logout", {
+      await axios.post("/api/profile/logout", {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
