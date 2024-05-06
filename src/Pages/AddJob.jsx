@@ -14,7 +14,7 @@ const AddJob = ({ addJobSubmit }) => {
 
   const fetchUser = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/profile/${userId}`);
+      const res = await axios.get(`/api/profile/${userId}`);
       if (res.status === 200) {
         setUser(res.data);
       } else {
@@ -39,7 +39,7 @@ const AddJob = ({ addJobSubmit }) => {
   const submitForm = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/jobs/create", {
+      await axios.post("/api/jobs/create", {
         title,
         type,
         location,
@@ -75,7 +75,7 @@ const AddJob = ({ addJobSubmit }) => {
 
   return user ? (
     <>
-     {(myRole === 'admin' || myRole === 'hr') ? (
+     { myRole === 'hr' ? (
 
     <section className='bg-indigo-50'>
       <div className='container m-auto max-w-2xl py-24'>

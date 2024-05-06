@@ -29,7 +29,7 @@ const AddHr = () => {
       return;
     }
     try {
-      await fetch("http://localhost:5000/profile/signup", {
+      await fetch("/api/profile/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

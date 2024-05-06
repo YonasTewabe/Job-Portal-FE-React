@@ -47,7 +47,7 @@ const EditJob = ({ updateJobSubmit }) => {
     };
   
     try {
-      const response = await axios.patch(`http://localhost:5000/jobs/${id}`, {
+      const response = await axios.patch(`/api/jobs/${id}`, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -69,7 +69,7 @@ const EditJob = ({ updateJobSubmit }) => {
   
   return (
     <>
-    {(myRole === 'admin' || myRole === "hr") ? (
+    { myRole === "hr" ? (
     <section className='bg-indigo-50'>
       <div className='container m-auto max-w-2xl py-24'>
         <div className='bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0'>
