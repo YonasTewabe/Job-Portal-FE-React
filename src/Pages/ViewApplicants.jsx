@@ -16,20 +16,18 @@ const ViewApplicants = () => {
   const [user_email, setUser_email] = useState("");
   const [userStatus, setUserStatus] = useState("");
   const [userJob, setUserJob] = useState("");
-  const [interviewDate, setInterviewDate] = useState("")
-  const [interviewLocation, setInterviewLocation] = useState("")
+  const [interviewDate, setInterviewDate] = useState("");
+  const [interviewLocation, setInterviewLocation] = useState("");
   const [refreshKey, setRefreshKey] = useState(0); // Add a state for the refresh key
   const [sortCriterion, setSortCriterion] = useState("");
   const [sortAscending, setSortAscending] = useState(true);
   const jobId = Cookies.get("jobId");
-  const myRole= localStorage.getItem('role')
+  const myRole = localStorage.getItem("role");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5000/application/all`
-        );
+        const response = await axios.get(`/api/application/all`);
         const filteredApplicants = response.data.filter(
           (application) => application.jobid === jobId
         );
@@ -48,7 +46,7 @@ const ViewApplicants = () => {
     const templateParams = {
       user_email: applicant.contactemail,
       job: applicant.jobtitle,
-      company: applicant.companyname
+      company: applicant.companyname,
     };
     try {
       await emailjs.send(
@@ -67,7 +65,7 @@ const ViewApplicants = () => {
     const templateParams = {
       user_email: applicant.contactemail,
       job: applicant.jobtitle,
-      company: applicant.companyname
+      company: applicant.companyname,
     };
     try {
       await emailjs.send(
@@ -82,14 +80,14 @@ const ViewApplicants = () => {
     }
   };
 
-  const sendInterviewEmail = async (applicant) => {
+  const sendInterviewEmail = async (applicant, interviewDate, interviewLocation) => {
     const templateParams = {
       user_email: applicant.contactemail,
       job: applicant.jobtitle,
       company: applicant.companyname,
-      date: applicant.interviewDate,
-      location: applicant.interviewLocation
-    }
+      interviewDate,
+      interviewLocation
+    };
     try {
       await emailjs.send(
         "service_cdqe8jz",
@@ -98,19 +96,20 @@ const ViewApplicants = () => {
         "mNJZuOq6lqTT9mHE7"
       );
       console.log("Interview email sent!");
+      console.log(interviewDate, interviewLocation)
     } catch (error) {
       console.error("Error sending interview email:", error);
     }
   };
+  console.log(interviewDate, interviewLocation)
+  
 
   const renderCV = (cv) => {
     if (cv) {
       return (
         <div>
           <button
-            onClick={() =>
-              window.open(`http://localhost:5000/uploads/${cv}`, "_blank")
-            }
+            onClick={() => window.open(`/api/uploads/${cv}`, "_blank")}
             className="ml-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-1 px-2 rounded-full focus:outline-none focus:shadow-outline"
           >
             Download CV
@@ -124,16 +123,16 @@ const ViewApplicants = () => {
 
   const acceptClick = async (applicant) => {
     try {
-      await axios.patch(`http://localhost:5000/application/${applicant.id}`, {
-        status: "Under Review",
+      await axios.patch(`/api/application/${applicant.id}`, {
+        status: "Under Consideration",
       });
       const updatedApplicants = applicants.map((app) =>
-        app.id === applicant.id ? { ...app, status: "Under Review" } : app
+        app.id === applicant.id ? { ...app, status: "Under Consideration" } : app
       );
       setApplicants(updatedApplicants);
 
       setUser_email(applicant.contactemail);
-      setUserStatus("Under Review");
+      setUserStatus("Under Consideration");
       setUserJob(applicant.jobtitle);
 
       sendSuccessEmail(applicant);
@@ -144,10 +143,10 @@ const ViewApplicants = () => {
 
   const interviewClick = async (applicant) => {
     try {
-      await axios.patch(`http://localhost:5000/application/${applicant.id}`, {
+      await axios.patch(`/api/application/${applicant.id}`, {
         status: "Interview Scheduled",
         interviewDate,
-        interviewLocation
+        interviewLocation,
       });
       const updatedApplicants = applicants.map((app) =>
         app.id === applicant.id
@@ -161,8 +160,8 @@ const ViewApplicants = () => {
       setUserJob(applicant.jobtitle);
 
       setTimeout(() => {
-        sendInterviewEmail(applicant);
-      }, 1000);
+        sendInterviewEmail(applicant, interviewDate, interviewLocation);
+      }, 3000);
     } catch (error) {
       console.error("Error scheduling interview:", error);
     }
@@ -170,7 +169,7 @@ const ViewApplicants = () => {
 
   const rejectClick = async (applicant) => {
     try {
-      await axios.patch(`http://localhost:5000/application/${applicant.id}`, {
+      await axios.patch(`/api/application/${applicant.id}`, {
         status: "Rejected",
       });
       const updatedApplicants = applicants.map((app) =>
@@ -200,8 +199,8 @@ const ViewApplicants = () => {
     const modifier = isAscending ? 1 : -1;
     switch (criterion) {
       case "name":
-        return [...applicants].sort(
-          (a, b) => modifier * a.fullname.localeCompare(b.fullname)
+        return [...applicants].sort((a, b) =>
+          modifier * a.fullname.localeCompare(b.fullname)
         );
       case "applicationDate":
         return [...applicants].sort(
@@ -210,17 +209,15 @@ const ViewApplicants = () => {
             (new Date(a.applicationdate) - new Date(b.applicationdate))
         );
       case "status":
-        return [...applicants].sort(
-          (a, b) => modifier * a.status.localeCompare(b.status)
+        return [...applicants].sort((a, b) =>
+          modifier * a.status.localeCompare(b.status)
         );
       case "education":
-        return [...applicants].sort(
-          (a, b) => modifier * a.degree.localeCompare(b.degree)
+        return [...applicants].sort((a, b) =>
+          modifier * a.degree.localeCompare(b.degree)
         );
       case "experience":
-        return [...applicants].sort(
-          (a, b) => modifier * (a.experience - b.experience)
-        );
+        return [...applicants].sort((a, b) => modifier * (a.experience - b.experience));
       default:
         return applicants;
     }
@@ -237,171 +234,170 @@ const ViewApplicants = () => {
 
   let sortedApplicants = [...applicants];
   if (sortCriterion) {
-    sortedApplicants = customSort(
-      sortedApplicants,
-      sortCriterion,
-      sortAscending
-    );
+    sortedApplicants = customSort(sortedApplicants, sortCriterion, sortAscending);
   }
 
   return (
     <>
-    {(myRole === 'admin' || myRole === "hr") ? (
-    <div className="container mx-auto bg-indigo-100 py-10 px-6">
-      <br />
-      <h1 className="text-3xl mb-6 text-indigo-700">Applicants </h1>
-      <div className="flex justify-end mb-4">
-        <select
-          id="sortCriterion"
-          className="p-2 border rounded"
-          value={sortCriterion}
-          onChange={(e) => handleSortChange(e.target.value)}
-        >
-          <option value="" disabled>
-            Sort Applicants
-          </option>
-          <option value="name">Applicant Name</option>
-          <option value="applicationDate">Application Date</option>
-          <option value="education">Education</option>
-          <option value="experience">Experience</option>
-          <option value="status">Status</option>
-        </select>
-        <select
-          id="sortOrder"
-          className="p-2 border rounded"
-          value={sortAscending ? "asc" : "desc"}
-          onChange={() => setSortAscending((prev) => !prev)}
-        >
-          <option value="asc">Ascending</option>
-          <option value="desc">Descending</option>
-        </select>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-        {sortedApplicants.map((applicant) => (
-          <div
-            key={applicant.id}
-            className="bg-white p-6 rounded-lg shadow-md text-center md:text-left"
-          >
-            <h3 className="text-xl font-bold">Name:</h3>
-            <p className="my-2 bg-indigo-100 p-2 font-bold">
-              {applicant.fullname}
-            </p>
-            <h3 className="text-xl font-bold">Education:</h3>
-            <p className="my-2 bg-indigo-100 p-2 font-bold">
-              {applicant.degree}
-            </p>
-
-            <h3 className="text-xl font-bold">University:</h3>
-            <p className="my-2 bg-indigo-100 p-2 font-bold">
-              {applicant.university}
-            </p>
-
-            <h3 className="text-xl font-bold">Experience:</h3>
-            <p className="my-2 bg-indigo-100 p-2 font-bold">
-              {applicant.experience}
-            </p>
-
-            <h3 className="text-xl font-bold">Email Address:</h3>
-            <p className="my-2 bg-indigo-100 p-2 font-bold">
-              {applicant.contactemail}
-            </p>
-
-            <h3 className="text-xl font-bold">Phone Number:</h3>
-            <p className="my-2 bg-indigo-100 p-2 font-bold">
-              {applicant.userphone}
-            </p>
-
-            <h3 className="text-xl font-bold">CV:</h3>
-            {renderCV(applicant.cv)}
-
-            <h3 className="text-xl font-bold">Applied On:</h3>
-            <p className="my-2 bg-indigo-100 p-2 font-bold">
-              {applicant.applicationdate}
-            </p>
-            <div className="flex justify-center items-center mt-4">
-              {applicant.status === "Pending" ? (
-                <>
-                  <button
-                    type="button"
-                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mr-2"
-                    onClick={() => acceptClick(applicant)}
-                  >
-                    Accept
-                  </button>
-                  <button
-                    type="button"
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full mr-2"
-                    onClick={() => rejectClick(applicant)}
-                  >
-                    Reject
-                  </button>
-                </>
-              ) : (
-                <p className="text-xl font-bold">Status: {applicant.status}</p>
-              )}
-            </div>
-            {applicant.status === "Under Review" && (
-              <div>
-                <label
-                  htmlFor="interviewDate"
-                  className="block text-gray-700 text-sm font-bold mt-6 mb-2"
-                >
-                  Interview Date
-                </label>
-                <input
-                  id="interviewDate"
-                  name="interviewDate"
-                  type="date"
-                  className="border rounded py-2 px-3 w-full"
-                  value={interviewDate}
-                  required
-                  onChange={(e) => setInterviewDate(e.target.value)}
-                />
-                <label
-                  htmlFor="interviewLocation"
-                  className="block text-gray-700 text-sm font-bold mt-6 mb-2"
-                >
-                  Interview Location
-                </label>
-                <input
-                  id="interviewLocation"
-                  name="interviewLocation"
-                  type="text"
-                  placeholder="Interview Location"
-                  value={interviewLocation}
-                  required
-                  onChange={(e) => setInterviewLocation(e.target.value)}
-                  className="border rounded py-2 px-3 w-full"
-                />
-                <button
-                  type="button"
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-                  onClick={() => interviewClick(applicant)}
-                >
-                  Schedule Interview
-                </button>
-              </div>
-            )}
+      {myRole === "hr" ? (
+        <div className="container mx-auto bg-indigo-100 py-10 px-6">
+          <br />
+          <h1 className="text-3xl mb-6 text-indigo-700">Applicants </h1>
+          <div className="flex justify-end mb-4">
+            <select
+              id="sortCriterion"
+              className="p-2 border rounded"
+              value={sortCriterion}
+              onChange={(e) => handleSortChange(e.target.value)}
+            >
+              <option value="" disabled>
+                Sort Applicants
+              </option>
+              <option value="name">Applicant Name</option>
+              <option value="applicationDate">Application Date</option>
+              <option value="education">Education</option>
+              <option value="experience">Experience</option>
+              <option value="status">Status</option>
+            </select>
+            <select
+              id="sortOrder"
+              className="p-2 border rounded"
+              value={sortAscending ? "asc" : "desc"}
+              onChange={() => setSortAscending((prev) => !prev)}
+            >
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
           </div>
-        ))}
-      </div>
-      <br />
-      <h1 className="text-3xl mb-6 text-indigo-700">Summary</h1>
-      <div className="bg-white p-6 rounded-lg shadow-md text-center md:text-left">
-        <Donut key={refreshKey} />
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-          onClick={handleRefresh}
-        >
-          Refresh Summary
-        </button>
-      </div>
-    </div>
-      ): (
-        <UnauthorizedAccess />
+          {sortedApplicants.length === 0 ? (
+            <p>No applicants yet</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+              {sortedApplicants.map((applicant) => (
+                <div
+                  key={applicant.id}
+                  className="bg-white p-6 rounded-lg shadow-md text-center md:text-left"
+                >
+                  <h3 className="text-xl font-bold">Name:</h3>
+                  <p className="my-2 bg-indigo-100 p-2 font-bold">
+                    {applicant.fullname}
+                  </p>
+                  <h3 className="text-xl font-bold">Education:</h3>
+                  <p className="my-2 bg-indigo-100 p-2 font-bold">
+                    {applicant.degree}
+                  </p>
 
-     )}
-     </>
+                  <h3 className="text-xl font-bold">University:</h3>
+                  <p className="my-2 bg-indigo-100 p-2 font-bold">
+                    {applicant.university}
+                  </p>
+
+                  <h3 className="text-xl font-bold">Experience:</h3>
+                  <p className="my-2 bg-indigo-100 p-2 font-bold">
+                    {applicant.experience}
+                  </p>
+
+                  <h3 className="text-xl font-bold">Email Address:</h3>
+                  <p className="my-2 bg-indigo-100 p-2 font-bold">
+                    {applicant.contactemail}
+                  </p>
+
+                  <h3 className="text-xl font-bold">Phone Number:</h3>
+                  <p className="my-2 bg-indigo-100 p-2 font-bold">
+                    {applicant.userphone}
+                  </p>
+
+                  <h3 className="text-xl font-bold">CV:</h3>
+                  {renderCV(applicant.cv)}
+
+                  <h3 className="text-xl font-bold">Applied On:</h3>
+                  <p className="my-2 bg-indigo-100 p-2 font-bold">
+                    {applicant.applicationdate}
+                  </p>
+                  <div className="flex justify-center items-center mt-4">
+                    {applicant.status === "Pending" ? (
+                      <>
+                        <button
+                          type="button"
+                          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mr-2"
+                          onClick={() => acceptClick(applicant)}
+                        >
+                          Accept
+                        </button>
+                        <button
+                          type="button"
+                          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full mr-2"
+                          onClick={() => rejectClick(applicant)}
+                        >
+                          Reject
+                        </button>
+                      </>
+                    ) : (
+                      <p className="text-xl font-bold">Status: {applicant.status}</p>
+                    )}
+                  </div>
+                  {applicant.status === "Under Consideration" && (
+                    <div>
+                      <label
+                        htmlFor="interviewDate"
+                        className="block text-gray-700 text-sm font-bold mt-6 mb-2"
+                      >
+                        Interview Date
+                      </label>
+                      <input
+                        id="interviewDate"
+                        name="interviewDate"
+                        type="date"
+                        className="border rounded py-2 px-3 w-full"
+                        value={interviewDate}
+                        required
+                        onChange={(e) => setInterviewDate(e.target.value)}
+                      />
+                      <label
+                        htmlFor="interviewLocation"
+                        className="block text-gray-700 text-sm font-bold mt-6 mb-2"
+                      >
+                        Interview Location
+                      </label>
+                      <input
+                        id="interviewLocation"
+                        name="interviewLocation"
+                        type="text"
+                        placeholder="Interview Location"
+                        value={interviewLocation}
+                        required
+                        onChange={(e) => setInterviewLocation(e.target.value)}
+                        className="border rounded py-2 px-3 w-full"
+                      />
+                      <button
+                        type="button"
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+                        onClick={() => interviewClick(applicant)}
+                      >
+                        Schedule Interview
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+          <br />
+          <h1 className="text-3xl mb-6 text-indigo-700">Summary</h1>
+          <div className="bg-white p-6 rounded-lg shadow-md text-center md:text-left">
+            <Donut key={refreshKey} />
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+              onClick={handleRefresh}
+            >
+              Refresh Summary
+            </button>
+          </div>
+        </div>
+      ) : (
+        <UnauthorizedAccess />
+      )}
+    </>
   );
 };
 

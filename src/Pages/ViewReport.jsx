@@ -15,19 +15,19 @@ const Donut = () => {
 
 
   const [options] = useState({
-    labels: ["Under Review", "Interview Scheduled","Pending", "Rejected"],
+    labels: ["Under Consideration", "Interview Scheduled","Pending", "Rejected"],
   });
 useEffect(() => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/application/all`
+        `/api/application/all`
       );
       const filteredApplications = response.data.filter(
         (application) => application.jobid === jobId
       );
       const considerationCount = filteredApplications.filter(
-        (application) => application.status === "Under Review"
+        (application) => application.status === "Under Consideration"
       ).length;
       const rejectedCount = filteredApplications.filter(
         (application) => application.status === "Rejected"
