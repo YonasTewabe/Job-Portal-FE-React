@@ -101,8 +101,11 @@ const Account = ({ deleteUser }) => {
                     {user.experience}
                   </p>
                   <h3 className="text-xl font-bold flex">CV:</h3>
+                  <p className="my-2 bg-indigo-100 p-2 font-bold flex">
                   {user.cv}
                   {renderCV(user.cv)}
+                  </p>
+
                 </div>
                 <div className="bg-white p-6 rounded-lg shadow-md">
                   <h3 className="text-indigo-800 text-lg font-bold mb-6">
