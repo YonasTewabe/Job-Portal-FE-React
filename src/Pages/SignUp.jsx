@@ -60,7 +60,6 @@ const SignUp = () => {
         templateParams,
         "CxqrPI5OiPSTIGXkB"
       );
-      console.log("Registered email sent!");
     } catch (error) {
       console.error("Error sending email:", error);
     }
