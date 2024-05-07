@@ -18,7 +18,7 @@ const ViewApplicants = () => {
   const [userJob, setUserJob] = useState("");
   const [interviewDate, setInterviewDate] = useState("");
   const [interviewLocation, setInterviewLocation] = useState("");
-  const [refreshKey, setRefreshKey] = useState(0); // Add a state for the refresh key
+  const [refreshKey, setRefreshKey] = useState(0);
   const [sortCriterion, setSortCriterion] = useState("");
   const [sortAscending, setSortAscending] = useState(true);
   const jobId = Cookies.get("jobId");
@@ -55,7 +55,6 @@ const ViewApplicants = () => {
         templateParams,
         "BXXQ2nYkNnwzZHBbD"
       );
-      console.log("Success email sent!");
     } catch (error) {
       console.error("Error sending success email:", error);
     }
@@ -74,7 +73,6 @@ const ViewApplicants = () => {
         templateParams,
         "BXXQ2nYkNnwzZHBbD"
       );
-      console.log("Rejection email sent!");
     } catch (error) {
       console.error("Error sending rejection email:", error);
     }
@@ -95,13 +93,10 @@ const ViewApplicants = () => {
         templateParams,
         "mNJZuOq6lqTT9mHE7"
       );
-      console.log("Interview email sent!");
-      console.log(interviewDate, interviewLocation)
     } catch (error) {
       console.error("Error sending interview email:", error);
     }
   };
-  console.log(interviewDate, interviewLocation)
   
 
   const renderCV = (cv) => {
