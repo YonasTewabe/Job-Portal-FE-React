@@ -34,7 +34,6 @@ const ForgotPassword = () => {
         templateParams,
         "mNJZuOq6lqTT9mHE7"
       );
-      console.log("Reset email sent!");
     } catch (error) {
       console.error("Error sending email:", error);
     }
@@ -47,7 +46,7 @@ const ForgotPassword = () => {
       return;
     }
 
-    const generatedPassword = generatePassword(9); // Generate a 10-character password
+    const generatedPassword = generatePassword(9); // Generate a random password
 
     try {
       await axios.patch(`/api/profile/email/${Email}`, {
