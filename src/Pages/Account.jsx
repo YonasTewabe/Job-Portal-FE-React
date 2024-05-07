@@ -62,6 +62,7 @@ const Account = ({ deleteUser }) => {
       <section className="bg-indigo-50">
         <div className="container m-auto py-10 px-6">
           <div>
+            <br />
             {role == "user" && (
               <div className="grid grid-cols-1  w-full gap-6">
                 <div className="bg-white p-6 rounded-lg shadow-md md:text-left">
