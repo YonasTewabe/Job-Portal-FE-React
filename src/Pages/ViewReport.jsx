@@ -15,6 +15,7 @@ const Donut = () => {
 
 
   const [options] = useState({
+    
     labels: ["Under Consideration", "Interview Scheduled","Pending", "Rejected"],
   });
 useEffect(() => {

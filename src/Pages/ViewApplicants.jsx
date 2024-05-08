@@ -299,7 +299,7 @@ const ViewApplicants = () => {
 
                   <h3 className="text-xl font-bold">Phone Number:</h3>
                   <p className="my-2 bg-indigo-100 p-2 font-bold">
-                    {applicant.userphone}
+                    +251 {applicant.userphone}
                   </p>
 
                   <h3 className="text-xl font-bold">CV:</h3>
