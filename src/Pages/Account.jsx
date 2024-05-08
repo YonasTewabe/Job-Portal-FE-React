@@ -34,7 +34,11 @@ const Account = ({ deleteUser }) => {
         localStorage.removeItem("role");
         localStorage.removeItem("usercompleted");
         localStorage.removeItem("hrcompleted");
-        navigate("/signup");
+        localStorage.removeItem("hrStatus");
+        navigate("/login");
+      }
+      else {
+        toast.error("Unable to delete account. Try again later.")
       }
     });
   };
