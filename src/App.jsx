@@ -19,6 +19,7 @@ import ViewStatus from "./Pages/ViewStatus";
 import AddHr from "./Pages/AddHr";
 import ChangePassword from "./Pages/ChangePassword";
 import ForgotPassword from "./Pages/ForgotPassword";
+import ViewHrList from "./Pages/ViewHrList";
 import CompanyInfo from "./Pages/CompanyInfo";
 
 const App = () => {
@@ -64,6 +65,7 @@ const App = () => {
         <Route path='/add-hr' element={<AddHr />} />
         <Route path='/changepassword/:id' element={<ChangePassword />} />
         <Route path='/forgotpassword' element={<ForgotPassword />} />
+        <Route path='/view-hr' element={<ViewHrList />} />
         
 
       </Route>
