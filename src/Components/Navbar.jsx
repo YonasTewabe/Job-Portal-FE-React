@@ -51,7 +51,7 @@ const Navbar = () => {
       className: { linkClass },
     },   {
       icon: <CiViewList size={25} className="mr-4" />,
-      text: "View Hr",
+      text: "Registered Hr",
       link: "/view-hr",
       className: { linkClass },
     },
