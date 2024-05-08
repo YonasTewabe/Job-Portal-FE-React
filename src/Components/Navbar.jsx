@@ -44,10 +44,15 @@ const Navbar = () => {
       link: "/",
       className: { linkClass },
     },
-   {
+    {
       icon: <IoMdPersonAdd size={25} className="mr-4" />,
       text: "Add Hr",
       link: "/add-hr",
+      className: { linkClass },
+    },   {
+      icon: <CiViewList size={25} className="mr-4" />,
+      text: "View Hr",
+      link: "/view-hr",
       className: { linkClass },
     },
     {
@@ -99,6 +104,7 @@ const Navbar = () => {
       localStorage.removeItem("role");
       localStorage.removeItem("usercompleted");
       localStorage.removeItem("hrcompleted");
+      localStorage.removeItem("hrStatus");
       navigate("/login", { replace: true }); 
     } catch (error) {
       console.error("Logout error:", error);

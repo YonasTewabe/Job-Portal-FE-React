@@ -31,6 +31,7 @@ const ValidatedLoginForm = () => {
       Cookies.set("userId", response.data.profileId, { expires: 1 });
       localStorage.setItem("usercompleted", response.data.usercompleted);
       localStorage.setItem("hrcompleted", response.data.hrcompleted);
+      localStorage.setItem("hrStatus", response.data.hrStatus);
       localStorage.setItem("role", response.data.role);
   
       setEmail("");
