@@ -13,7 +13,6 @@ const Navbar = () => {
   const [nav, setNav] = useState(false);
   const sidebarRef = useRef(null);
   const linkClass = ({ isActive }) => (isActive ? "text-[#3b82f6]" : "");
-
   const role = localStorage.getItem("role");
  
   const hrMenu = [

@@ -13,7 +13,8 @@ const Account = ({ deleteUser }) => {
   // eslint-disable-next-line no-unused-vars
   const param = useParams();
   const role = localStorage.getItem("role");
-
+ 
+  
   //Delete Account
   const onDelete = (userId) => {
     Swal.fire({
