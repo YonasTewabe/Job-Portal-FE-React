@@ -21,6 +21,7 @@ import ChangePassword from "./Pages/ChangePassword";
 import ForgotPassword from "./Pages/ForgotPassword";
 import ViewHrList from "./Pages/ViewHrList";
 import CompanyInfo from "./Pages/CompanyInfo";
+import ViewUserList from "./Pages/ViewUserList";
 
 const App = () => {
   // Add new job
@@ -66,6 +67,7 @@ const App = () => {
         <Route path='/changepassword/:id' element={<ChangePassword />} />
         <Route path='/forgotpassword' element={<ForgotPassword />} />
         <Route path='/view-hr' element={<ViewHrList />} />
+        <Route path='/view-users' element={<ViewUserList />} />
         
 
       </Route>
