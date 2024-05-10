@@ -15,7 +15,7 @@ const withAuth = (WrappedComponent) => {
 
       useEffect(() => {
         const checkAuth = async () => {
-            const jwtToken = cookies.get('jwt'); // Use cookies.get('jwt') to get the JWT token
+            const jwtToken = cookies.get('jwt');
             if (!jwtToken) {
                 setRedirecting(true);
                 navigate('/login');
