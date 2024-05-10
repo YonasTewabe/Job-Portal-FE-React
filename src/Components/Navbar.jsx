@@ -7,14 +7,14 @@ import { GoPlusCircle } from "react-icons/go";
 import { useNavigate, NavLink } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
 import Cookies from "js-cookie";
-import axios from "../axiosInterceptor"
+import axios from "../axiosInterceptor";
 
 const Navbar = () => {
   const [nav, setNav] = useState(false);
   const sidebarRef = useRef(null);
   const linkClass = ({ isActive }) => (isActive ? "text-[#3b82f6]" : "");
   const role = localStorage.getItem("role");
- 
+
   const hrMenu = [
     {
       icon: <FaHome size={25} className="mr-4" />,
@@ -33,7 +33,7 @@ const Navbar = () => {
       text: "Your Jobs",
       link: "/jobs",
       className: { linkClass },
-    }
+    },
   ];
 
   const adminMenu = [
@@ -48,10 +48,17 @@ const Navbar = () => {
       text: "Add Hr",
       link: "/add-hr",
       className: { linkClass },
-    },   {
+    },
+    {
       icon: <CiViewList size={25} className="mr-4" />,
       text: "Registered Hr",
       link: "/view-hr",
+      className: { linkClass },
+    },
+    {
+      icon: <CiViewList size={25} className="mr-4" />,
+      text: "Registered Users",
+      link: "/view-users",
       className: { linkClass },
     },
     {
@@ -59,7 +66,7 @@ const Navbar = () => {
       text: "All Jobs",
       link: "/jobs",
       className: { linkClass },
-    }
+    },
   ];
 
   const userMenu = [
@@ -68,8 +75,8 @@ const Navbar = () => {
       text: "Home",
       link: "/",
       className: { linkClass },
-    }, 
-     {
+    },
+    {
       icon: <CiViewList size={25} className="mr-4" />,
       text: "All Jobs",
       link: "/jobs",
@@ -80,7 +87,7 @@ const Navbar = () => {
       text: "Applied Jobs",
       link: "/status",
       className: { linkClass },
-    }
+    },
   ];
 
   const handleOutsideClick = (e) => {
@@ -99,17 +106,16 @@ const Navbar = () => {
       });
       Cookies.remove("userId");
       Cookies.remove("jwt");
-      Cookies.remove("jobId")
+      Cookies.remove("jobId");
       localStorage.removeItem("role");
       localStorage.removeItem("usercompleted");
       localStorage.removeItem("hrcompleted");
       localStorage.removeItem("hrStatus");
-      navigate("/login", { replace: true }); 
+      navigate("/login", { replace: true });
     } catch (error) {
       console.error("Logout error:", error);
     }
   };
-  
 
   useEffect(() => {
     document.addEventListener("mousedown", handleOutsideClick);
@@ -122,9 +128,8 @@ const Navbar = () => {
   const storedId = Cookies.get("userId");
   const value = storedId ? `/account/${storedId}` : "/";
 
- 
   if (role !== "user" && role !== "admin" && role !== "hr") {
-    return null; 
+    return null;
   }
 
   return (
@@ -150,7 +155,9 @@ const Navbar = () => {
         </button>
       </div>
 
-      {nav && <div className="bg-black/80 fixed w-full h-screen z-60 top-0 left-0"></div>}
+      {nav && (
+        <div className="bg-black/80 fixed w-full h-screen z-60 top-0 left-0"></div>
+      )}
 
       <div
         ref={sidebarRef}
@@ -165,39 +172,54 @@ const Navbar = () => {
         </div>
         <nav>
           <ul className="flex flex-col p-4 text-gray-800">
-            {role=='user' && userMenu.map(({ icon, text, link }, index) => {
-              return (
-                <div key={index} className=" py-4">
-                  <NavLink to={link} className={linkClass} onClick={() => setNav(false)}>
-                    <li className="text-xl flex cursor-pointer  w-[95%] mx-auto hover:bg-[#e1e9f0]">
-                      {icon} {text}
-                    </li>
-                  </NavLink>
-                </div>
-              );
-            })}
-             {role=='admin' && adminMenu.map(({ icon, text, link }, index) => {
-              return (
-                <div key={index} className=" py-4">
-                  <NavLink to={link} className={linkClass} onClick={() => setNav(false)}>
-                    <li className="text-xl flex cursor-pointer  w-[95%] mx-auto hover:bg-[#e1e9f0]">
-                      {icon} {text}
-                    </li>
-                  </NavLink>
-                </div>
-              );
-            })}
-             {role=='hr' && hrMenu.map(({ icon, text, link }, index) => {
-              return (
-                <div key={index} className=" py-4">
-                  <NavLink to={link} className={linkClass} onClick={() => setNav(false)}>
-                    <li className="text-xl flex cursor-pointer  w-[95%] mx-auto hover:bg-[#e1e9f0]">
-                      {icon} {text}
-                    </li>
-                  </NavLink>
-                </div>
-              );
-            })}
+            {role == "user" &&
+              userMenu.map(({ icon, text, link }, index) => {
+                return (
+                  <div key={index} className=" py-4">
+                    <NavLink
+                      to={link}
+                      className={linkClass}
+                      onClick={() => setNav(false)}
+                    >
+                      <li className="text-xl flex cursor-pointer  w-[95%] mx-auto hover:bg-[#e1e9f0]">
+                        {icon} {text}
+                      </li>
+                    </NavLink>
+                  </div>
+                );
+              })}
+            {role == "admin" &&
+              adminMenu.map(({ icon, text, link }, index) => {
+                return (
+                  <div key={index} className=" py-4">
+                    <NavLink
+                      to={link}
+                      className={linkClass}
+                      onClick={() => setNav(false)}
+                    >
+                      <li className="text-xl flex cursor-pointer  w-[95%] mx-auto hover:bg-[#e1e9f0]">
+                        {icon} {text}
+                      </li>
+                    </NavLink>
+                  </div>
+                );
+              })}
+            {role == "hr" &&
+              hrMenu.map(({ icon, text, link }, index) => {
+                return (
+                  <div key={index} className=" py-4">
+                    <NavLink
+                      to={link}
+                      className={linkClass}
+                      onClick={() => setNav(false)}
+                    >
+                      <li className="text-xl flex cursor-pointer  w-[95%] mx-auto hover:bg-[#e1e9f0]">
+                        {icon} {text}
+                      </li>
+                    </NavLink>
+                  </div>
+                );
+              })}
           </ul>
         </nav>
       </div>
