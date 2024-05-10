@@ -90,7 +90,6 @@ const Job = ({ deleteJob }) => {
     }
   };
 
-
   const isDeadlinePassed = new Date(job.deadline) < new Date();
 
   const handleViewApplicants = () => {
@@ -114,8 +113,6 @@ const Job = ({ deleteJob }) => {
       }
     });
   };
-
-  
 
   return (
     <>
@@ -197,60 +194,61 @@ const Job = ({ deleteJob }) => {
 
           {/* Manage Job Section */}
           {role == "hr" && (
-  <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-    <Link
-      to={`/edit-job/${job.id}`}
-      className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-    >
-      Edit Job
-    </Link>
-    <Link
-      to={`/applicants/${job.id}`}
-      onClick={handleViewApplicants}
-      className="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-    >
-      View Applicants
-    </Link>
+            <div className="bg-white p-6 rounded-lg shadow-md mt-6">
+              <Link
+                to={`/edit-job/${job.id}`}
+                className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+              >
+                Edit Job
+              </Link>
+              <Link
+                to={`/applicants/${job.id}`}
+                onClick={handleViewApplicants}
+                className="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+              >
+                View Applicants
+              </Link>
 
+              <button
+                onClick={() => onDeleteClick(job.id)}
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+              >
+                Delete Job
+              </button>
+            </div>
+          )}
 
-<button
-onClick={() => onDeleteClick(job.id)}
-className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
->
-Delete Job
-</button>
-</div>
-)}
+          {role == "admin" && (
+            <div className="bg-white p-6 rounded-lg shadow-md mt-6">
 
-{role == "admin" && (
-  <button
-    onClick={() => onDeleteClick(job.id)}
-    className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-  >
-    Delete Job
-  </button>
-)}
+            <button
+              onClick={() => onDeleteClick(job.id)}
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+            >
+              Delete Job
+            </button>
+            </div>
+          )}
 
-{role == "user" && (
-  <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-    {!isDeadlinePassed ? (
-      <button
-        onClick={submitForm}
-        className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-      >
-        Apply Job
-      </button>
-    ) : (
-      <button
-        className="bg-red-500 text-white font-bold py-2 px-4 rounded-full w-full cursor-not-allowed opacity-50 mt-4 block"
-        disabled
-      >
-        Deadline Passed
-      </button>
-    )}
-  </div>
-)}
-
+          {role == "user" && (
+            <div className="bg-white p-6 rounded-lg shadow-md mt-6">
+              {!isDeadlinePassed ? (
+                <button
+                  onClick={submitForm}
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+                >
+                  Apply Job
+                </button>
+              ) : (
+                <button
+                  className="bg-red-500 text-white font-bold py-2 px-4 rounded-full w-full cursor-not-allowed opacity-50 mt-4 block"
+                  disabled
+                >
+                  Deadline Passed
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </section>
     </>
