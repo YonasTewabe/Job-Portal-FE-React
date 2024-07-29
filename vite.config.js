@@ -5,13 +5,15 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000,
+    port: 80,
     proxy: {
       '/api': {
-        target :'http://backend:5000',
+        target :'http://app:5000',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
   },
 })
+
+// docker exec -it FE-id85432a112e04 curl -X POST http://app:5000/profile/signup -H "Origin: http://localhost:80" -H "Content-Type: application/json" -d "{\"email\": \"Admin21@mail.com\", \"password\": \"Admin1@mail.com\", \"confirmPassword\": \"Admin1@mail.com\"}" 

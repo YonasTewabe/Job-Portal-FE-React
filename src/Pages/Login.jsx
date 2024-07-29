@@ -22,7 +22,7 @@ const ValidatedLoginForm = () => {
     }
   
     try {
-      const response = await axios.post("http://localhost:5000/profile/login", {
+      const response = await axios.post("http://app:5000/profile/login", {
         email,
         password,
       });
