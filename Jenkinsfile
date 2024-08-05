@@ -23,6 +23,12 @@ pipeline {
                 }
             }
         }
+        stage('Verify Deployment') {
+    steps {
+        sh 'curl -f http://139.185.53.188/ || exit 1'
+    }
+}
+
     }
 
     post {
