@@ -1,7 +1,6 @@
 pipeline {
     agent any
 
-
     stages {
         stage('checkout') {
             steps {
@@ -14,7 +13,7 @@ pipeline {
                 axes {
                     axis {
                         name 'NODE_VERSION'
-                        values '14.x', '16.x', '18.x'
+                        values '14', '16', '18', '20'
                     }
                 }
                 stages {
@@ -23,7 +22,12 @@ pipeline {
                             script {
                                 def nodeVersion = env.NODE_VERSION
                                 echo "Using Node.js version: $nodeVersion"
-                                // Add logic here to set up the desired Node.js version
+                                sh """
+                                    curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o n
+                                    bash n $nodeVersion
+                                    export PATH="$PATH"
+                                    node -v
+                                """
                             }
                         }
                     }
@@ -46,6 +50,7 @@ pipeline {
             }
         }
     }
+
     post {
         success {
             echo "Pipeline successful"
