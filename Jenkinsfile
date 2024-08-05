@@ -19,17 +19,16 @@ pipeline {
                 stages {
                     stage('Setup Node') {
                         steps {
-                            script {
-                             
-                                   def nodeVersion = env.NODE_VERSION
+                            script { def nodeVersion = env.NODE_VERSION
                                 echo "Using Node.js version: $nodeVersion"
                                 withCredentials([usernamePassword(credentialsId: '596fe7ad-856d-4f00-b2fc-c3277fffd85c', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                                     sh """
                                         export N_PREFIX=\$WORKSPACE/n
                                         mkdir -p \$N_PREFIX
-                                        curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o \$WORKSPACE/n/n
-                                        chmod +x \$WORKSPACE/n/n
-                                        \$WORKSPACE/n/n $nodeVersion
+                                        curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o /tmp/n
+                                        chmod +x /tmp/n
+                                        mv /tmp/n \$N_PREFIX/n
+                                        \$N_PREFIX/n $nodeVersion
                                         export PATH=\$N_PREFIX/bin:\$PATH
                                         node -v
                                         echo \$USERNAME
