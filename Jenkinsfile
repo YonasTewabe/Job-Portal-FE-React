@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     // Define the number of builds to keep
-                    def buildsToKeep = 5
+                    def buildsToKeep = 3
                     // Delete old builds
                     def buildDir = "${env.WORKSPACE}/builds"
                     sh "find ${buildDir} -type f -mtime +${buildsToKeep} -exec rm -f {} +"
