@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        NODE_VERSIONS = ['20']
-        DEPLOY_FOLDER = '/var/www/html/job-portal'  // Path where you want to deploy the files
+        NODE_VERSIONS = '20'
+        DEPLOY_FOLDER = '/var/www/html/job-portal'
     }
 
     stages {
@@ -25,7 +25,6 @@ pipeline {
                     stage('Install Dependencies') {
                         steps {
                             script {
-                                // Directly use Node.js version 20
                                 sh '''
                                     export N_PREFIX=$WORKSPACE/n
                                     mkdir -p $N_PREFIX
