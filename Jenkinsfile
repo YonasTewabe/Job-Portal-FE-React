@@ -26,7 +26,6 @@ pipeline {
                     stage('Install Dependencies') {
                         steps {
                             script {
-                                // Setup Node.js using the updated N_PREFIX
                                 sh '''
                                     mkdir -p $N_PREFIX
                                     curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o /tmp/n
@@ -48,7 +47,6 @@ pipeline {
                     stage('Deploy to Web Server') {
                         steps {
                             script {
-                                // Ensure the deployment directory exists
                                 sh '''
                                     sudo mkdir -p $DEPLOY_FOLDER
                                     sudo cp -r dist/* $DEPLOY_FOLDER/
