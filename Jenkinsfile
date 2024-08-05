@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     environment {
-        NODE_VERSIONS = '20'
+        NODE_VERSION = '20'
+        N_PREFIX = '/var/lib/jenkins/n'
         DEPLOY_FOLDER = '/var/www/html/job-portal'
     }
 
@@ -25,17 +26,17 @@ pipeline {
                     stage('Install Dependencies') {
                         steps {
                             script {
+                                // Setup Node.js using the updated N_PREFIX
                                 sh '''
-                                    export N_PREFIX=$WORKSPACE/n
                                     mkdir -p $N_PREFIX
                                     curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o /tmp/n
                                     chmod +x /tmp/n
                                     mv /tmp/n $N_PREFIX/n
                                     export PATH=$N_PREFIX:$PATH
-                                    $N_PREFIX/n 20
+                                    $N_PREFIX/n $NODE_VERSION
                                     node -v
+                                    npm install --force
                                 '''
-                                sh 'npm install --force'
                             }
                         }
                     }
