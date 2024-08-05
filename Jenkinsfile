@@ -1,10 +1,14 @@
 pipeline {
     agent any
 
+    environment {
+        NODE_VERSIONS = ['14', '16', '18']
+    }
+
     stages {
         stage('checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/YonasTewabe/Job-Portal-FE-React.git'
+                checkout scm
             }
         }
 
@@ -13,7 +17,7 @@ pipeline {
                 axes {
                     axis {
                         name 'NODE_VERSION'
-                        values '14', '16', '18', '20'
+                        values '14', '16', '18'
                     }
                 }
                 stages {
@@ -22,7 +26,7 @@ pipeline {
                             script {
                                 def nodeVersion = env.NODE_VERSION
                                 echo "Using Node.js version: $nodeVersion"
-                                withCredentials([string(credentialsId: 'your-credentials-id', variable: 'SECRET_TEXT')]) {
+                                withCredentials([usernamePassword(credentialsId: '596fe7ad-856d-4f00-b2fc-c3277fffd85c', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                                     sh """
                                         export N_PREFIX=\$WORKSPACE/n
                                         mkdir -p \$N_PREFIX
@@ -30,7 +34,8 @@ pipeline {
                                         bash n $nodeVersion
                                         export PATH=\$N_PREFIX/bin:\$PATH
                                         node -v
-                                        echo \$SECRET_TEXT
+                                        echo \$USERNAME
+                                        echo \$PASSWORD
                                     """
                                 }
                             }
