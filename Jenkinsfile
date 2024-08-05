@@ -13,7 +13,7 @@ pipeline {
                 axes {
                     axis {
                         name 'NODE_VERSION'
-                        values '14', '16', '18', '20'
+                        values '20'
                     }
                 }
                 stages {
