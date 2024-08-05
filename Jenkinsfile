@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        NODE_VERSIONS = ['20']
+        DEPLOY_FOLDER = '/var/www/html/job-portal'  // Path where you want to deploy the files
+    }
+
     stages {
         stage('checkout') {
             steps {
@@ -13,44 +18,42 @@ pipeline {
                 axes {
                     axis {
                         name 'NODE_VERSION'
-                        values '14', '16', '18', '20'
+                        values '20'
                     }
                 }
                 stages {
-                    stage('Setup Node') {
-                        steps {
-                            script { def nodeVersion = env.NODE_VERSION
-                                echo "Using Node.js version: $nodeVersion"
-                                withCredentials([usernamePassword(credentialsId: '596fe7ad-856d-4f00-b2fc-c3277fffd85c', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                     sh '''
-                                        export N_PREFIX=$WORKSPACE/n
-                                        mkdir -p $N_PREFIX
-                                        curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o /tmp/n || { echo "Failed to download n"; exit 1; }
-                                        chmod +x /tmp/n || { echo "Failed to make n executable"; exit 1; }
-                                        mv /tmp/n $N_PREFIX/n || { echo "Failed to move n"; exit 1; }
-                                        $N_PREFIX/n $nodeVersion || { echo "Failed to install Node.js version $nodeVersion"; exit 1; }
-                                        export PATH=$N_PREFIX/bin:$PATH
-                                        node -v
-                                        echo $USERNAME
-                                        echo $PASSWORD
-                                    '''
-                                }
-                            }
-                        }
-                    }
                     stage('Install Dependencies') {
                         steps {
-                            sh 'npm ci'
+                            script {
+                                // Directly use Node.js version 20
+                                sh '''
+                                    export N_PREFIX=$WORKSPACE/n
+                                    mkdir -p $N_PREFIX
+                                    curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o /tmp/n
+                                    chmod +x /tmp/n
+                                    mv /tmp/n $N_PREFIX/n
+                                    export PATH=$N_PREFIX:$PATH
+                                    $N_PREFIX/n 20
+                                    node -v
+                                '''
+                                sh 'npm install --force'
+                            }
                         }
                     }
                     stage('Build') {
                         steps {
-                            sh 'npm run build --if-present'
+                            sh 'npm run build'
                         }
                     }
-                    stage('Test') {
+                    stage('Deploy to Web Server') {
                         steps {
-                            sh 'npm test'
+                            script {
+                                // Ensure the deployment directory exists
+                                sh '''
+                                    sudo mkdir -p $DEPLOY_FOLDER
+                                    sudo cp -r dist/* $DEPLOY_FOLDER/
+                                '''
+                            }
                         }
                     }
                 }
