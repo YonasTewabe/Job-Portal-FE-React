@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('checkout') {
             steps {
-                checkout scm
+                git branch: 'main', url: 'https://github.com/YonasTewabe/Job-Portal-FE-React.git'
             }
         }
 
@@ -13,23 +13,26 @@ pipeline {
                 axes {
                     axis {
                         name 'NODE_VERSION'
-                        values '20'
+                        values '14', '16', '18', '20'
                     }
                 }
                 stages {
                     stage('Setup Node') {
                         steps {
                             script {
-                                 def nodeVersion = env.NODE_VERSION
+                                def nodeVersion = env.NODE_VERSION
                                 echo "Using Node.js version: $nodeVersion"
-                                sh """
-                                    export N_PREFIX=\$WORKSPACE/n
-                                    mkdir -p \$N_PREFIX
-                                    curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o n
-                                    bash n $nodeVersion
-                                    export PATH=\$N_PREFIX/bin:\$PATH
-                                    node -v
-                                """
+                                withCredentials([string(credentialsId: 'your-credentials-id', variable: 'SECRET_TEXT')]) {
+                                    sh """
+                                        export N_PREFIX=\$WORKSPACE/n
+                                        mkdir -p \$N_PREFIX
+                                        curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o n
+                                        bash n $nodeVersion
+                                        export PATH=\$N_PREFIX/bin:\$PATH
+                                        node -v
+                                        echo \$SECRET_TEXT
+                                    """
+                                }
                             }
                         }
                     }
