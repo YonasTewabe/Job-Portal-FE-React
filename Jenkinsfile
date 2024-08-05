@@ -18,7 +18,7 @@ pipeline {
                     sh '''
                          mkdir -p /var/www/html/job-portal
                         
-                        sudo cp -r dist/* /var/www/html/job-portal/
+                         cp -r dist/* /var/www/html/job-portal/
                     '''
                 }
             }
