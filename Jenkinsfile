@@ -16,9 +16,9 @@ pipeline {
                     sh 'npm run build'
                     
                     sh '''
-                     sudo mkdir -p /var/www/html/job-portal
+                      mkdir -p /var/www/html/job-portal
                         
-                        sudo cp -r dist/* /var/www/html/job-portal/
+                         cp -r dist/* /var/www/html/job-portal/
                     '''
                 }
             }
