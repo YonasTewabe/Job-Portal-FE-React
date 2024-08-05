@@ -1,8 +1,6 @@
 pipeline {
     agent any
-    environment {
-        NODE_VERSIONS = ['14.x', '16.x', '18.x']
-    }
+
 
     stages {
         stage('checkout') {
