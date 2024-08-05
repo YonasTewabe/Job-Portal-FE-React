@@ -21,13 +21,15 @@ pipeline {
                         steps {
                             script {
                                 def nodeVersion = env.NODE_VERSION
-                                // echo "Using Node.js version: $nodeVersion"
-                                // sh """
-                                //     curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o n
-                                //     bash n $nodeVersion
-                                //     export PATH="$PATH"
-                                //     node -v
-                                // """
+                                echo "Using Node.js version: $nodeVersion"
+                                sh """
+                                    export N_PREFIX=$WORKSPACE/n
+                                    mkdir -p $N_PREFIX
+                                    curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o n
+                                    bash n $nodeVersion
+                                    export PATH=$N_PREFIX/bin:$PATH
+                                    node -v
+                                """
                             }
                         }
                     }
