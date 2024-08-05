@@ -24,7 +24,7 @@ pipeline {
                                 echo "Using Node.js version: $nodeVersion"
                                 sh """
                                     export N_PREFIX=\$WORKSPACE/n
-                                   sudo mkdir -p \$N_PREFIX
+                                    mkdir -p \$N_PREFIX
                                     curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o n
                                     bash n $nodeVersion
                                     export PATH=\$N_PREFIX/bin:\$PATH
