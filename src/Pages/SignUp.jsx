@@ -3,43 +3,42 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { BiShow, BiHide } from "react-icons/bi";
 import { toast } from "react-toastify";
-import emailjs from "@emailjs/browser"
-
+import emailjs from "@emailjs/browser";
 
 const SignUp = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   // eslint-disable-next-line no-unused-vars
-  const [role, setRole] = useState('user')
+  const [role, setRole] = useState("user");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/;
+  const passwordRegex =
+    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!validateForm()) {
       return;
     }
-   
-  
+
     try {
-      await fetch('/api/profile/signup', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+      await fetch("/api/profile/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
           password,
-          role
-        })
+          role,
+        }),
       });
       toast.success("Sign up successful. Please log in.");
-      signupEmail()
-      navigate('/login');
+      signupEmail();
+      navigate("/capstone/login");
     } catch (error) {
       if (error.response && error.response.status === 409) {
         toast.error("Email already in use");
@@ -48,11 +47,11 @@ const SignUp = () => {
       }
       console.error(error);
     }
-  }
+  };
   const signupEmail = async () => {
     const templateParams = {
-      email
-    }
+      email,
+    };
     try {
       await emailjs.send(
         "service_s02dvbp",
@@ -64,7 +63,6 @@ const SignUp = () => {
       console.error("Error sending email:", error);
     }
   };
-  
 
   const validateForm = () => {
     const schema = Yup.object().shape({
@@ -75,27 +73,30 @@ const SignUp = () => {
         .required("Password is required")
         .matches(
           passwordRegex,
-          'Password must contain at least one number, one uppercase letter, one lowercase letter, and one special character'
+          "Password must contain at least one number, one uppercase letter, one lowercase letter, and one special character"
         )
         .min(8, "Password must be at least 8 characters"),
       confirmPassword: Yup.string()
         .oneOf([password], "Passwords must match")
-        .required("Confirm Password is required")
+        .required("Confirm Password is required"),
     });
 
     try {
-      schema.validateSync({ email, password, confirmPassword }, { abortEarly: false });
+      schema.validateSync(
+        { email, password, confirmPassword },
+        { abortEarly: false }
+      );
       setErrors({});
       return true;
     } catch (error) {
       const newErrors = {};
-      error.inner.forEach(err => {
+      error.inner.forEach((err) => {
         newErrors[err.path] = err.message;
       });
       setErrors(newErrors);
       return false;
     }
-  }
+  };
 
   return (
     <div className="flex justify-center items-center h-screen">
