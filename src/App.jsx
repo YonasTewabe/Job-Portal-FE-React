@@ -1,4 +1,4 @@
-import { Route,Routes,Router, createBrowserRouter, createRoutesFromElements, RouterProvider, BrowserRouter } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Route, createRoutesFromElements } from "react-router-dom";
 import HomePage from "./Pages/HomePage";
 import Layout from "./Components/Layout";
 import Jobs from "./Pages/Jobs";
@@ -12,7 +12,7 @@ import Account, { userLoader } from "./Pages/Account";
 import UpdateUser from "./Pages/UpdateUser";
 import SignUp from "./Pages/SignUp";
 import ValidatedLoginForm from "./Pages/Login";
-import ViewApplicants from "./Pages/ViewApplicants"
+import ViewApplicants from "./Pages/ViewApplicants";
 import ContactUs from "./Pages/ContactUs";
 import AboutUs from "./Pages/AboutUs";
 import ViewStatus from "./Pages/ViewStatus";
@@ -40,41 +40,34 @@ const App = () => {
   };
   
   const deleteUser = async (id) => {
-    await axios.delete(`/api/profile/${id}`)
+    await axios.delete(`/api/profile/${id}`);
   }
 
   const router = createBrowserRouter(
     createRoutesFromElements(
-        <Router basename="/capstone">
-    <Routes>
-        <Route path='/' element={<Layout />}>
+      <Route path="/capstone/" element={<Layout />}>
         <Route index element={<HomePage />} />
-        <Route path='*' element={<NotFoundPage />} />
-        <Route path='/jobs' element={<Jobs />} />
-        <Route path='/report' element={<ViewReport />} />
-        <Route path='/add-job' element={<AddJob addJobSubmit={addJob} />} />
-        <Route path='/UpdateUser/:id' element={<UpdateUser />} loader={userLoader} />
-        <Route path='/CompanyInfo/:id' element={<CompanyInfo />} loader={userLoader} />
-        <Route path='/edit-job/:id' element={<EditJob updateJobSubmit={updateJob} />} loader={jobLoader} />
-        <Route path='/job/:id' element={<Job deleteJob={deleteJob} />} loader={jobLoader} />
-        <Route path='/account/:id' element={<Account deleteUser={deleteUser} />} loader={userLoader} />
-        <Route path='/signup' element={<SignUp />} />
-        <Route path='/login' element={<ValidatedLoginForm />} />
-        <Route path='/applicants/:id' element={<ViewApplicants />} loader={userLoader} />
-        <Route path='/contact' element={<ContactUs />} />
-        <Route path='/about' element={<AboutUs />} />
-        <Route path='/status' element={<ViewStatus />} />
-        <Route path='/add-hr' element={<AddHr />} />
-        <Route path='/changepassword/:id' element={<ChangePassword />} />
-        <Route path='/forgotpassword' element={<ForgotPassword />} />
-        <Route path='/view-hr' element={<ViewHrList />} />
-        <Route path='/view-users' element={<ViewUserList />} />
-        
-
+        <Route path="*" element={<NotFoundPage />} />
+        <Route path="jobs" element={<Jobs />} />
+        <Route path="report" element={<ViewReport />} />
+        <Route path="add-job" element={<AddJob addJobSubmit={addJob} />} />
+        <Route path="UpdateUser/:id" element={<UpdateUser />} loader={userLoader} />
+        <Route path="CompanyInfo/:id" element={<CompanyInfo />} loader={userLoader} />
+        <Route path="edit-job/:id" element={<EditJob updateJobSubmit={updateJob} />} loader={jobLoader} />
+        <Route path="job/:id" element={<Job deleteJob={deleteJob} />} loader={jobLoader} />
+        <Route path="account/:id" element={<Account deleteUser={deleteUser} />} loader={userLoader} />
+        <Route path="signup" element={<SignUp />} />
+        <Route path="login" element={<ValidatedLoginForm />} />
+        <Route path="applicants/:id" element={<ViewApplicants />} loader={userLoader} />
+        <Route path="contact" element={<ContactUs />} />
+        <Route path="about" element={<AboutUs />} />
+        <Route path="status" element={<ViewStatus />} />
+        <Route path="add-hr" element={<AddHr />} />
+        <Route path="changepassword/:id" element={<ChangePassword />} />
+        <Route path="forgotpassword" element={<ForgotPassword />} />
+        <Route path="view-hr" element={<ViewHrList />} />
+        <Route path="view-users" element={<ViewUserList />} />
       </Route>
-      </Routes>
-          </Router>
-        
     )
   );
 
