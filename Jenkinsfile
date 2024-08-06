@@ -22,17 +22,17 @@ pipeline {
             }
         }
 
-        // stage('Build Docker Image') {
-        //     steps {
-        //         script {
-        //             def imageName = 'yonastewabe/job-portal'
-        //             def imageTag = "latest"
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    def imageName = 'yonastewabe/job-portal'
+                    def imageTag = "latest"
                     
-        //             sh "docker build -t ${imageName}:${imageTag} ."
-        //             // sh "docker push ${imageName}:${imageTag}"
-        //         }
-        //     }
-        // }
+                    sh "docker build -t ${imageName}:${imageTag} ."
+                    // sh "docker push ${imageName}:${imageTag}"
+                }
+            }
+        }
     }
 
     post {
