@@ -1,4 +1,4 @@
-import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom";
+import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider, BrowserRouter } from "react-router-dom";
 import HomePage from "./Pages/HomePage";
 import Layout from "./Components/Layout";
 import Jobs from "./Pages/Jobs";
@@ -45,7 +45,7 @@ const App = () => {
 
   const router = createBrowserRouter(
     createRoutesFromElements(
-      
+      <BrowserRouter basename="/capstone">
         <Route path='/' element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path='*' element={<NotFoundPage />} />
@@ -71,6 +71,7 @@ const App = () => {
         
 
       </Route>
+        </BrowserRouter>
     )
   );
 
