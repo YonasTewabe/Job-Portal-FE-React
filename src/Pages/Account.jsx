@@ -13,8 +13,7 @@ const Account = ({ deleteUser }) => {
   // eslint-disable-next-line no-unused-vars
   const param = useParams();
   const role = localStorage.getItem("role");
- 
-  
+
   //Delete Account
   const onDelete = (userId) => {
     Swal.fire({
@@ -36,10 +35,9 @@ const Account = ({ deleteUser }) => {
         localStorage.removeItem("usercompleted");
         localStorage.removeItem("hrcompleted");
         localStorage.removeItem("hrStatus");
-        navigate("/login");
-      }
-      else {
-        toast.error("Unable to delete account. Try again later.")
+        navigate("/capstone/login");
+      } else {
+        toast.error("Unable to delete account. Try again later.");
       }
     });
   };
@@ -108,10 +106,9 @@ const Account = ({ deleteUser }) => {
                   </p>
                   <h3 className="text-xl font-bold flex">CV:</h3>
                   <p className="my-2 bg-indigo-100 p-2 font-bold flex">
-                  {user.cv}
-                  {renderCV(user.cv)}
+                    {user.cv}
+                    {renderCV(user.cv)}
                   </p>
-
                 </div>
                 <div className="bg-white p-6 rounded-lg shadow-md">
                   <h3 className="text-indigo-800 text-lg font-bold mb-6">
