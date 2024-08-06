@@ -45,7 +45,8 @@ const App = () => {
 
   const router = createBrowserRouter(
     createRoutesFromElements(
-     
+        <Router basename="/capstone">
+    <Routes>
         <Route path='/' element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path='*' element={<NotFoundPage />} />
@@ -71,6 +72,8 @@ const App = () => {
         
 
       </Route>
+      </Routes>
+          </Router>
         
     )
   );
