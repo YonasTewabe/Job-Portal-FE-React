@@ -161,7 +161,7 @@ const ValidatedLoginForm = () => {
           </Link>
           <span className="text-sm">
             Don&apos;t have an account yet?
-            <Link to="/capstonesignup" className="text-blue-500">
+            <Link to="/capstone/signup" className="text-blue-500">
               Sign Up
             </Link>
           </span>

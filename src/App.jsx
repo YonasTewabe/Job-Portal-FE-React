@@ -1,4 +1,9 @@
-import { createBrowserRouter, RouterProvider, Route, createRoutesFromElements } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Route,
+  createRoutesFromElements,
+} from "react-router-dom";
 import HomePage from "./Pages/HomePage";
 import Layout from "./Components/Layout";
 import Jobs from "./Pages/Jobs";
@@ -26,7 +31,7 @@ import ViewUserList from "./Pages/ViewUserList";
 const App = () => {
   // Add new job
   const addJob = async (newJob) => {
-    await axios.post('/api/jobs', newJob);
+    await axios.post("/api/jobs", newJob);
   };
 
   // Deleting job
@@ -38,27 +43,51 @@ const App = () => {
   const updateJob = async (job) => {
     await axios.put(`/api/jobs/${job.id}`, job);
   };
-  
+
   const deleteUser = async (id) => {
     await axios.delete(`/api/profile/${id}`);
-  }
+  };
 
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route path="/capstone/" element={<Layout />}>
+      <Route path="/capstone//" element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="*" element={<NotFoundPage />} />
         <Route path="jobs" element={<Jobs />} />
         <Route path="report" element={<ViewReport />} />
         <Route path="add-job" element={<AddJob addJobSubmit={addJob} />} />
-        <Route path="UpdateUser/:id" element={<UpdateUser />} loader={userLoader} />
-        <Route path="CompanyInfo/:id" element={<CompanyInfo />} loader={userLoader} />
-        <Route path="edit-job/:id" element={<EditJob updateJobSubmit={updateJob} />} loader={jobLoader} />
-        <Route path="job/:id" element={<Job deleteJob={deleteJob} />} loader={jobLoader} />
-        <Route path="account/:id" element={<Account deleteUser={deleteUser} />} loader={userLoader} />
+        <Route
+          path="UpdateUser/:id"
+          element={<UpdateUser />}
+          loader={userLoader}
+        />
+        <Route
+          path="CompanyInfo/:id"
+          element={<CompanyInfo />}
+          loader={userLoader}
+        />
+        <Route
+          path="edit-job/:id"
+          element={<EditJob updateJobSubmit={updateJob} />}
+          loader={jobLoader}
+        />
+        <Route
+          path="job/:id"
+          element={<Job deleteJob={deleteJob} />}
+          loader={jobLoader}
+        />
+        <Route
+          path="account/:id"
+          element={<Account deleteUser={deleteUser} />}
+          loader={userLoader}
+        />
         <Route path="signup" element={<SignUp />} />
         <Route path="login" element={<ValidatedLoginForm />} />
-        <Route path="applicants/:id" element={<ViewApplicants />} loader={userLoader} />
+        <Route
+          path="applicants/:id"
+          element={<ViewApplicants />}
+          loader={userLoader}
+        />
         <Route path="contact" element={<ContactUs />} />
         <Route path="about" element={<AboutUs />} />
         <Route path="status" element={<ViewStatus />} />
