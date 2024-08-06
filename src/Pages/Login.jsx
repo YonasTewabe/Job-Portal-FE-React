@@ -156,7 +156,7 @@ const ValidatedLoginForm = () => {
           </div>
         </form>
         <div className="text-center mt-4 flex justify-between">
-          <Link to="forgotpassword" className="text-sm text-blue-500">
+          <Link to="/capstone/forgotpassword" className="text-sm text-blue-500">
             Forgot Password?
           </Link>
           <span className="text-sm">
