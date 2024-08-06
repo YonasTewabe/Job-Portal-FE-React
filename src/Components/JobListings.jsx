@@ -72,77 +72,73 @@ const JobListings = ({ isHome = false }) => {
 
   const displayJobs = isHome ? hrJobs.slice(0, 3) : hrJobs;
 
-
   return (
     <>
-    <section className="bg-blue-50 px-4 py-10">
-      <div className="container-xl lg:container m-auto">
-        <h2 className="text-3xl font-bold text-indigo-500 mb-6 text-center">
-          
-          {isHome ? "Recent Jobs" :  "Browse Jobs"}
-        </h2>
+      <section className="bg-blue-50 px-4 py-10">
+        <div className="container-xl lg:container m-auto">
+          <h2 className="text-3xl font-bold text-indigo-500 mb-6 text-center">
+            {isHome ? "Recent Jobs" : "Browse Jobs"}
+          </h2>
 
-        {!isHome && (
-          <div className="mb-4 flex justify-between items-center">
-            <input
-              type="text"
-              placeholder="Search jobs"
-              className="border p-2 rounded w-full"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+          {!isHome && (
+            <div className="mb-4 flex justify-between items-center">
+              <input
+                type="text"
+                placeholder="Search jobs"
+                className="border p-2 rounded w-full"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
 
-            <select
-              className="border p-2 rounded"
-              value={sortCriteria}
-              onChange={(e) => setSortCriteria(e.target.value)}
-            >
-              <option value="" disabled>
-                Sort Jobs
-              </option>
-              <option value="title">Sort by Job Title</option>
-              <option value="companyName">Sort by Company Name</option>
-              <option value="deadline">Sort by Deadline</option>
-              <option value="type">Sort by Job Type</option>
-            </select>
+              <select
+                className="border p-2 rounded"
+                value={sortCriteria}
+                onChange={(e) => setSortCriteria(e.target.value)}
+              >
+                <option value="" disabled>
+                  Sort Jobs
+                </option>
+                <option value="title">Sort by Job Title</option>
+                <option value="companyName">Sort by Company Name</option>
+                <option value="deadline">Sort by Deadline</option>
+                <option value="type">Sort by Job Type</option>
+              </select>
 
-            <select
-              className="border p-2 rounded"
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
-            >
-              <option value="asc">Ascending</option>
-              <option value="desc">Descending</option>
-            </select>
-          </div>
-        )}
+              <select
+                className="border p-2 rounded"
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+              >
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+              </select>
+            </div>
+          )}
 
-        {loading ? (
-          <Spinner loading={loading} />
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {displayJobs.length > 0 ? (
-              displayJobs.map((job) => (
-                <JobListing key={job.id} job={job} />
-              ))
-            ) : (
-              <p>No jobs found.</p>
-            )}
-          </div>
-        )}
-      </div>
-    </section>
-    {!isHome && role === "hr" && (
-    <section className="m-auto max-w-lg my-10 px-6">
-    <Link
-      to="/add-job"
-      className="block bg-black text-white text-center py-4 px-6 rounded-xl hover:bg-gray-700"
-      >Add new Job</Link
-    >
-  </section>
-    ) }
+          {loading ? (
+            <Spinner loading={loading} />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {displayJobs.length > 0 ? (
+                displayJobs.map((job) => <JobListing key={job.id} job={job} />)
+              ) : (
+                <p>No jobs found.</p>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+      {!isHome && role === "hr" && (
+        <section className="m-auto max-w-lg my-10 px-6">
+          <Link
+            to="/capstoneadd-job"
+            className="block bg-black text-white text-center py-4 px-6 rounded-xl hover:bg-gray-700"
+          >
+            Add new Job
+          </Link>
+        </section>
+      )}
     </>
-
   );
 };
 

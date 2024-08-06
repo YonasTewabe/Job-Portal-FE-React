@@ -16,24 +16,24 @@ const ValidatedLoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!validateForm()) {
       return;
     }
-  
+
     try {
       const response = await axios.post("http://localhost:5000/profile/login", {
         email,
         password,
       });
-  
+
       Cookies.set("jwt", response.data.jwt, { expires: 1 });
       Cookies.set("userId", response.data.profileId, { expires: 1 });
       localStorage.setItem("usercompleted", response.data.usercompleted);
       localStorage.setItem("hrcompleted", response.data.hrcompleted);
       localStorage.setItem("hrStatus", response.data.hrStatus);
       localStorage.setItem("role", response.data.role);
-  
+
       setEmail("");
       setPassword("");
       navigateAfterLogin();
@@ -72,11 +72,15 @@ const ValidatedLoginForm = () => {
     const usercompleted = localStorage.getItem("usercompleted");
     const hrcompleted = localStorage.getItem("hrcompleted");
 
-    if (usercompleted === "true" || hrcompleted === "true" || role ==='admin') {
+    if (
+      usercompleted === "true" ||
+      hrcompleted === "true" ||
+      role === "admin"
+    ) {
       navigate("/");
-    } else if (role === 'user' && usercompleted !== "true") {
+    } else if (role === "user" && usercompleted !== "true") {
       navigate(`/UpdateUser/${Cookies.get("userId")}`);
-    } else if (role === 'hr' && hrcompleted !== "true") {
+    } else if (role === "hr" && hrcompleted !== "true") {
       navigate(`/CompanyInfo/${Cookies.get("userId")}`);
     }
   };
@@ -85,7 +89,9 @@ const ValidatedLoginForm = () => {
     <div className="flex justify-center items-center h-screen">
       <div className="w-full max-w-md bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <p className="text-2xl text-indigo-700 text-center">Login</p>
-        {errors.login && <div className="text-red-500 text-sm text-center">{errors.login}</div>}
+        {errors.login && (
+          <div className="text-red-500 text-sm text-center">{errors.login}</div>
+        )}
         <form onSubmit={handleSubmit} className="max-w-sm mx-auto mt-8">
           <div className="mb-4">
             <label
@@ -115,22 +121,22 @@ const ValidatedLoginForm = () => {
             >
               Password
             </label>
-            <div  className="relative">
-            <input
-              id="password"
-              name="password"
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={`border rounded py-2 px-3 w-full ${
-                errors.password ? "border-red-500" : ""
-              }`}
-            />
-            {errors.password && (
-              <div className="text-red-500 text-sm">{errors.password}</div>
-            )}
-             <button
+            <div className="relative">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={`border rounded py-2 px-3 w-full ${
+                  errors.password ? "border-red-500" : ""
+                }`}
+              />
+              {errors.password && (
+                <div className="text-red-500 text-sm">{errors.password}</div>
+              )}
+              <button
                 type="button"
                 className="absolute inset-y-0 right-0 pr-3 flex items-center"
                 onClick={() => setShowPassword(!showPassword)}
@@ -138,7 +144,6 @@ const ValidatedLoginForm = () => {
                 {showPassword ? <BiHide /> : <BiShow />}
               </button>
             </div>
-          
 
             <div className="text-center mt-6">
               <button
@@ -156,7 +161,7 @@ const ValidatedLoginForm = () => {
           </Link>
           <span className="text-sm">
             Don&apos;t have an account yet?
-            <Link to="/signup" className="text-blue-500">
+            <Link to="/capstonesignup" className="text-blue-500">
               Sign Up
             </Link>
           </span>

@@ -120,7 +120,7 @@ const Job = ({ deleteJob }) => {
         <br /> <br />
         <div className="container m-auto py-6 px-6">
           <Link
-            to="/jobs"
+            to="/capstonejobs"
             className="text-indigo-500 hover:text-indigo-600 flex items-center"
           >
             <FaArrowLeft className="mr-2" /> Back to Job Listings
@@ -220,13 +220,12 @@ const Job = ({ deleteJob }) => {
 
           {role == "admin" && (
             <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-
-            <button
-              onClick={() => onDeleteClick(job.id)}
-              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-            >
-              Delete Job
-            </button>
+              <button
+                onClick={() => onDeleteClick(job.id)}
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+              >
+                Delete Job
+              </button>
             </div>
           )}
 

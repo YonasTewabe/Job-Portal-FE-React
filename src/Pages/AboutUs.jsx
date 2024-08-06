@@ -16,7 +16,7 @@ const AboutUs = () => {
         </p>
         <h2 className="text-2xl font-bold mb-4">Contact Us</h2>
         <p className="mb-4 text-gray-700">
-          If you have any questions or feedback, please don&apos;t hesitate to reach out to us. Our contact information can be found <Link to="/contact" className="text-indigo-500 font-bold">here</Link>. We value your input and are committed to improving our platform based on your suggestions.
+          If you have any questions or feedback, please don&apos;t hesitate to reach out to us. Our contact information can be found <Linkto="/capstonecontact" className="text-indigo-500 font-bold">here</Link>. We value your input and are committed to improving our platform based on your suggestions.
         </p>
         <p className="text-gray-700">
           We appreciate your interest and look forward to assisting you in your job search or hiring process!
